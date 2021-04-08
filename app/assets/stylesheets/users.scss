@@ -5,21 +5,9 @@
   text-align: center;
 }
 
-.btn1 {
-  margin-left: 20px;
-  margin-right: 20px;
-  text-decoration: none;
-  background: #fff;
-  border: 1px solid rgb(220, 220, 220);
-}
-
-.link-color{
-  color: #000;
-}
 
 .btn2 {
-  text-decoration: none;
-  
+  background: #ccc;
 }
 
 .time-space1 {
@@ -28,6 +16,14 @@
 .time-space2 {
   margin-right: 10px;
 }
+
+/* ユーザー情報下ボタン */
+
+.btn-users-show {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
 
 
 /* ユーザー勤怠情報テーブル */

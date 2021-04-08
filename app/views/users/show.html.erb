@@ -2,7 +2,7 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
-      <td colspan="2"><button class="btn1"><%= link_to "←", user_path(date: @first_day.prev_month), class: "link-color" %></button>【<%= l(@first_day, format: :middle) %>】時間管理表<button class="btn1"><%= link_to "→", user_path(date: @first_day.next_month), class: "link-color" %></button></td>
+      <td colspan="2"><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-default btn-sm" %>【<%= l(@first_day, format: :middle) %>】時間管理表 <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-default btn-sm" %></td>
       <td colspan="2">指定勤務時間<span class="time-space1"><%= format_basic_info(@user.work_time) %></span></td>
       <td colspan="2"><span class="time-space2"><%= format_basic_info(@user.basic_time) %></span>基本時間</td>
       <td>初日  <%= l(@first_day, format: :short) %></td>
@@ -20,7 +20,7 @@
 </div>
 
 
-<button type="button" class="btn btn-secondary btn-sm btn2"><%= link_to "勤怠を編集", edit_basic_info_user_path(@user), class: "link-color" %></button>  
+<%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-default btn-sm btn2" %>  
 
 
 <div>
@@ -56,17 +56,18 @@
           <!--<td></td>-->
           <td>
             <% if btn_text = attendance_state(day) %>
-              <button type="button" class="btn btn-secondary btn-sm btn2"><%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "link-color" %></button>
+              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-default btn-sm btn2" %>
             <% end %>
           </td>
           <td colspan="2"><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
           <td></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= working_times(day.started_at, day.finished_at) %>
+              <%= str_times = working_times(day.started_at, day.finished_at) %>
+              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
-          <td></td>
+          <td><%= day.note %></td>
           <!--<td></td>-->
           <!--<td></td>-->
         </tr>
@@ -85,8 +86,3 @@
   </table>
 </div>
 
-<% if current_user.admin? && !current_user?(@user) %>
-    <%= link_to "基本情報編集", edit_basic_info_user_path, remote: true, class: "btn btn-success" %>
-    <%= link_to "削除", user, method: :delete,
-        data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
-  <% end %>
