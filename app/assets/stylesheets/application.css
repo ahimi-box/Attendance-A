@@ -13,3 +13,10 @@
  *= require_tree .
  *= require_self
  */
+ 
+.sunday {
+  color: #f00;
+} 
+.saturday {
+  color: #00f;
+}
