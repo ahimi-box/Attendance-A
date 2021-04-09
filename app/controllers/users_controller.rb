@@ -8,7 +8,14 @@ class UsersController < ApplicationController
   
   
   def index
-    @users = User.paginate(page: params[:page])
+    # 条件分岐
+    @users = if params[:search].present?
+      #searchされた場合は、原文+.where('name LIKE ?', "%#{params[:search]}%")を実行
+      User.paginate(page: params[:page]).search(params[:search])
+    else
+      #searchされていない場合は、原文そのまま
+      User.paginate(page: params[:page])
+    end
   end
   
   def show
@@ -79,5 +86,5 @@ class UsersController < ApplicationController
       end
     end
 
-    
+
 end
