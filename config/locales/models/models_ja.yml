@@ -11,6 +11,8 @@ ja:
           department: 所属
           basic_time: 基本時間
           work_time: 勤務時間
+          work_start_time: 勤務指定開始時間
+          work_finish_time: 勤務指定終了時間
           password: パスワード
           password_confirmation: パスワード再入力
           created_at: 作成日

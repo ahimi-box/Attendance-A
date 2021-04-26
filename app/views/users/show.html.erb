@@ -2,39 +2,52 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
-      <td colspan="2"><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-default btn-sm" %>【<%= l(@first_day, format: :middle) %>】時間管理表 <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-default btn-sm" %></td>
-      <td colspan="2">指定勤務時間<span class="time-space1"><%= format_basic_info(@user.work_time) %></span></td>
-      <td colspan="2"><span class="time-space2"><%= format_basic_info(@user.basic_time) %></span>基本時間</td>
+      <td colspan="2"><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary btn-sm" %>【<%= l(@first_day, format: :middle) %>】時間管理表 <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-primary btn-sm" %></td>
+      <td colspan="2">指定勤務開始時間<span class="time-space1"><%= format_basic_info(@user.work_start_time) %></span><br>指定勤務終了時間<span class="time-space1"><%= format_basic_info(@user.work_finish_time) %></span></td>
+      <td colspan="2">基本時間  <span class="time-space2"><%= format_basic_info(@user.basic_time) %></span></td>
       <td>初日  <%= l(@first_day, format: :short) %></td>
     </tr>
 
     <tr>
       <td colspan="2">所属：<%= @user.department.present? ? @user.department : "未所属" %></td>
       <td>氏名  <%= @user.name %></td>
-      <td>出勤日数  <%= @worked_sum %>日</td>
       <td>コード</td>
       <td></td>
+      <td>出勤日数  <%= @worked_sum %>日</td>
+      
+      
       <td>締め  <%= l(@last_day, format: :short) %></td>
     </tr>
   </table>
 </div>
 
 
-<%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-default btn-sm btn2" %>  
+<%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary btn-sm" %>  
+<%= link_to "CSV出力", "#", class: "btn btn-primary btn-sm" %><br>  
+<%= link_to "勤怠修正ログ(承認済)", "#", class: "btn btn-primary btn-sm" %>  
 
 
 <div>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead>
       <tr>
+      <th colspan="3"></th>
+      <th colspan="8">【実績】</th>
+      <th colspan="5">所定外勤務</th>
+
+      </tr>
+      <tr>
+        <th rowspan="2">残業申請</th>
         <th rowspan="2">日付</th>
         <th rowspan="2">曜日</th>
         <th colspan="3">出社</th>
         <th colspan="3">退社</th>
         <th rowspan="2">在社時間</th>
         <th rowspan="2">備考</th>
-        <!--<th rowspan="2">残業指示</th>-->
-        <!--<th rowspan="2">指示者</th>-->
+        <th colspan="2">終了予定時間</th>
+        <th rowspan="2">時間外時間</th>
+        <th rowspan="2">業務処理内容</th>
+        <th rowspan="2">指示者確認㊞</th>
         
       </tr>
       <tr>
@@ -44,12 +57,18 @@
         <th>時</th>
         <th>分</th>
         <th></th>
+        <%# <th></th> %>
+        <%# <th></th> %>
+        <th>時</th>
+        <th>分</th>
+        
       </tr>
     </thead>
 
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
+        <td><%= link_to "残業申請", "#", class: "btn btn-primary btn-sm" %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td>
             <% if day.worked_on.wday == 0 %>
@@ -64,7 +83,7 @@
           <!--<td></td>-->
           <td>
             <% if btn_text = attendance_state(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-default btn-sm btn2" %>
+              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-sm" %>
             <% end %>
           </td>
           <td colspan="2"><%= l(day.finished_at.floor_to(15.minutes), format: :time) if day.finished_at.present? %></td>
@@ -76,20 +95,24 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <!--<td></td>-->
-          <!--<td></td>-->
+          <td colspan="2"></td>
+          <td></td>
+          <td></td>
+          <td></td>
         </tr>
       <% end %>
     </tbody>
     <tfoot>
       <tr>
-        <!--<td><td>-->
-        <td><td>
-        <td colspan="2"><td>
-        <td colspan="2"><td>
-        <td><%= format("%.2f", @total_working_times.to_f) %><td>
-        <!--<td><td>-->
-      </tr>  
+        <td></td>
+        <td colspan="2"></td>
+        <td colspan="6"></td>
+        <td><%= format("%.2f", @total_working_times.to_f) %></td>
+        <td colspan="5"></td>
+        <td>所属長承認  未<br><select class="select-width" size="1"><option></option><option>上長1</option><option>上長2</option></select><br><%= link_to "申請", "#", class: "btn btn-primary btn-block btn-1" %></td>
+
+      </tr> 
+       
     </tfoot>
   </table>
 </div>

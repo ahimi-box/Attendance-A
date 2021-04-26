@@ -31,7 +31,14 @@
             <tr>
               <td><%= l(day.worked_on, format: :short) %></td>
               <td>
-                <%= $days_of_the_week[day.worked_on.wday] %>
+                <% if day.worked_on.wday == 0 %>
+                  <div class="sunday"><%= $days_of_the_week[day.worked_on.wday] %></div>
+                <% elsif day.worked_on.wday == 6 %>
+                  <div class="saturday"><%= $days_of_the_week[day.worked_on.wday] %></div>
+                <% else %>
+                  <%= $days_of_the_week[day.worked_on.wday] %>
+                <% end %>
+                
                 
               </td>
               <% if Date.current < day.worked_on %>
