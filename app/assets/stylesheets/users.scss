@@ -93,6 +93,16 @@
   width: 30%;
 }
 
+/*index csv*/
+.btn-csv {
+  margin-top: 10px;
+  width: 250px;
+}
+
+.btn-index {
+  margin-top: 10px;
+}
+
 /* show申請ボタン位置 */
 .select-width{
  width: 80px;
@@ -103,4 +113,14 @@
 
 .request {
   margin: 0;
+}
+
+/* on_duty */
+.table-on_duty {
+  margin: auto;
+  width: 50%;
+  text-align: center;
+}
+.th-on_duty {
+  text-align: center;
 }

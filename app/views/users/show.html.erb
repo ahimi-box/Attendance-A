@@ -3,13 +3,13 @@
   <table class="table table-bordered table-condensed user-table">
     <tr>
       <td colspan="2"><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary btn-sm" %>【<%= l(@first_day, format: :middle) %>】時間管理表 <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-primary btn-sm" %></td>
-      <td colspan="2">指定勤務開始時間<span class="time-space1"><%= format_basic_info(@user.work_start_time) %></span><br>指定勤務終了時間<span class="time-space1"><%= format_basic_info(@user.work_finish_time) %></span></td>
-      <td colspan="2">基本時間  <span class="time-space2"><%= format_basic_info(@user.basic_time) %></span></td>
+      <td colspan="2">指定勤務開始時間<span class="time-space1"><%= format_basic_info(@user.designated_work_start_time) %></span><br>指定勤務終了時間<span class="time-space1"><%= format_basic_info(@user.designated_work_end_time) %></span></td>
+      <td colspan="2">基本時間  <span class="time-space2"><%= format_basic_info(@user.basic_work_time) %></span></td>
       <td>初日  <%= l(@first_day, format: :short) %></td>
     </tr>
 
     <tr>
-      <td colspan="2">所属：<%= @user.department.present? ? @user.department : "未所属" %></td>
+      <td colspan="2">所属：<%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
       <td>氏名  <%= @user.name %></td>
       <td>コード</td>
       <td></td>
@@ -115,7 +115,7 @@
         <td colspan="6"></td>
         <td><%= format("%.2f", @total_working_times.to_f) %></td>
         <td colspan="5"></td>
-        <td>所属長承認  未<br><select class="select-width" size="1"><option></option><option>上長1</option><option>上長2</option></select><br><%= link_to "申請", "#", class: "btn btn-primary btn-block btn-1" %></td>
+        <td>所属長承認  未<br><select class="select-width" size="1"><option></option><option>上長A</option><option>上長B</option></select><br><%= link_to "申請", "#", class: "btn btn-primary btn-block btn-1" %></td>
 
       </tr> 
        

@@ -1,5 +1,75 @@
 <% provide(:title, 'All Users') %>
+<% provide(:class_text, 'index') %>
+<% provide(:button_text, '編集する') %>
 <h1>ユーザー一覧</h1>
+
+
+<div class="csv">
+  <%= form_with(url: import_users_path, local: true) do |form| %> 
+    <%= form.file_field :file, accept: '.csv' %>
+    <%= form.submit "CSVをインポート", class: "btn btn-primary btn-csv" %>
+  <% end %>
+</div>
+
+<% @users.each do |user| %>
+  <p><%= user.name %></p>
+  <% if current_user.admin? && !current_user?(user) %>
+    <div class="index-delete">
+        <%= link_to "削除", user, method: :delete,
+            data: { confirm: "削除してよろしいですか？" }, class: "btn btn-primary" %>
+    </div>    
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo<%= user.id %>">編集</button>
+          </h4>
+        </div>
+        <div id="demo<%= user.id %>" class="collapse">
+          <div class="panel-body">
+            <div class="col-md-6 col-md-offset-3">
+              <%= form_with(model: user, url: update_basic_info_user_path(user), local: true, method: :patch) do |f| %>
+      
+                <%= f.label "名前", class: "label-#{yield(:class_text)}" %>
+                <%= f.text_field :name, class: "form-control" %>
+
+                <%= f.label "メールアドレス", class: "label-#{yield(:class_text)}" %>
+                <%= f.email_field :email, class: "form-control" %>
+
+                <%= f.label "所属", class: "label-#{yield(:class_text)}" %>
+                <%= f.text_field :affiliation, class: "form-control" %>
+
+                <%= f.label "社員番号", class: "label-#{yield(:class_text)}" %>
+                <%= f.text_field :employee_number, class: "form-control" %>
+              
+                <%= f.label "カードID", class: "label-#{yield(:class_text)}" %>
+                <%= f.text_field :uid, class: "form-control" %>
+                
+                <%= f.label "パスワード", class: "label-#{yield(:class_text)}" %>
+                <%= f.password_field :password, class: "form-control" %>
+
+                <%= f.label "基本勤務時間", class: "label-#{yield(:class_text)}" %>
+                <%= f.time_field :basic_work_time, class: "form-control" %>
+                
+                <%= f.label "指定勤務開始時間", class: "label-#{yield(:class_text)}" %>
+                <%= f.time_field :designated_work_start_time, class: "form-control" %>
+                
+                <%= f.label "指定勤務終了時間", class: "label-#{yield(:class_text)}" %>
+                <%= f.time_field :designated_work_end_time, class: "form-control" %>
+
+                <div class="center">
+                  <%= f.submit yield(:button_text), class: "btn btn-primary btn-lg btn-block btn-#{yield(:class_text)}" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>      
+ 
+
 
 <div class="search">
   <span class="search-name">ユーザー名検索</span>
@@ -12,15 +82,16 @@
 
 
 <div class="col-md-10 col-md-offset-1">
-  <%= will_paginate %>
+  <%# <%= will_paginate %> 
   <table class="table table-condensed table-hover" id="table-users">
     <thead>
       <tr>
         <th><%= User.human_attribute_name :name %></th>
-        <th class="center"><%= User.human_attribute_name :department %></th>
+        <th class="center"><%= User.human_attribute_name :affiliation %></th>
         <% if current_user.admin? %>
-          <th class="center"><%= User.human_attribute_name :basic_time %></th>
-          <th class="center"><%= User.human_attribute_name :work_time %></th>
+          <th class="center"><%= User.human_attribute_name :basic_work_time %></th>
+          <th class="center"><%= User.human_attribute_name :designated_work_start_time %></th>
+          <th class="center"><%= User.human_attribute_name :designated_work_end_time %></th>
         <% end %>
       </tr>
     </thead>
@@ -34,10 +105,11 @@
             <%= user.name %>
           <% end %>
         </td>
-        <td class="center"><%= user.department.present? ? user.department : "未所属" %></td>
+        <td class="center"><%= user.affiliation.present? ? user.affiliation : "未所属" %></td>
         <% if current_user.admin? %>
-          <td class="center"><%= format_basic_info(user.basic_time) %></td>
-          <td class="center"><%= format_basic_info(user.work_time) %></td>
+          <td class="center"><%= format_basic_info(user.basic_work_time) %></td>
+          <td class="center"><%= format_basic_info(user.designated_work_start_time) %></td>
+          <td class="center"><%= format_basic_info(user.designated_work_end_time) %></td>
         <% end %>
         <td class="center">
           <% if current_user.admin? && !current_user?(user) %>
@@ -49,7 +121,7 @@
       </tr>
     <% end %>
   </table>  
-  <%= will_paginate %>
+  <%# <%= will_paginate %> 
 </div>
 
 <!--モーダルウインドウ表示-->

@@ -6,16 +6,17 @@ class UsersController < ApplicationController
   before_action :set_one_month, only: :show
   before_action :admin_or_correct_user, only: :show
   
-  
   def index
-    # 条件分岐
-    @users = if params[:search].present?
-      #searchされた場合は、原文+.where('name LIKE ?', "%#{params[:search]}%")を実行
-      User.paginate(page: params[:page]).search(params[:search])
-    else
-      #searchされていない場合は、原文そのまま
-      User.paginate(page: params[:page])
-    end
+    @users = User.all
+
+    # # 条件分岐
+    # @users = if params[:search].present?
+       #searchされた場合は、原文+.where('name LIKE ?', "%#{params[:search]}%")を実行
+    #   User.paginate(page: params[:page]).search(params[:search])
+    # else
+    #   #searchされていない場合は、原文そのまま
+    #   User.paginate(page: params[:page])
+    # end
   end
   
   def show
@@ -67,14 +68,24 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
+  def import
+    # fileはtmpに自動で一時保存される
+    User.import(params[:file])
+    redirect_to users_url
+  end
+
+  def on_duty
+    @users = User.all
+  end
+
   private
   
     def user_params
-      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation)
     end
     
     def basic_info_params
-      params.require(:user).permit(:department, :basic_time, :work_start_time, :work_finish_time)
+      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :password, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
     
     def admin_or_correct_user

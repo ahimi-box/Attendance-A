@@ -1,0 +1,27 @@
+<% provide(:title, '出勤中社員一覧') %>
+
+<h1>出勤中社員一覧</h1>
+<div class="col-md-10 col-md-offset-1">
+<table class="table-bordered table-striped table-condensed table-on_duty">
+	<thead>
+		<tr>
+			<th class="th-on_duty">社員番号</th>
+			<th class="th-on_duty">名前</th>
+		</tr>
+	</thead>
+	<% @users.each do |user| %>
+    <% if user.attendances.any?{|day|
+			( day.worked_on == Date.today &&
+				!day.started_at.blank? &&
+				day.finished_at.blank? )
+			} %>
+			<tbody>
+				<tr>
+					<td><%= user.employee_number %></td>
+					<td><%= user.name %></td>
+				</tr>
+			</tbody>
+		<% end %>
+	<% end %>
+</table>
+</div>
