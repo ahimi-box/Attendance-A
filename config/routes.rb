@@ -19,5 +19,6 @@ Rails.application.routes.draw do
       get '/basic', to: 'users#basic'
     end
     resources :attendances, only: :update
+    resources :offices
   end
 end

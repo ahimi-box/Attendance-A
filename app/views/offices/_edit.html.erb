@@ -1,0 +1,44 @@
+<% provide(:title, '拠点情報修正') %>
+<% provide(:class_text, 'office-edit') %>
+<% provide(:button_text, '修正') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h1 class="modal-title">拠点情報修正</h1>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <%# <%= form_with(model: @user, url: update_basic_info_user_path(@user), local: true, method: :patch) do |f| %> 
+          <%# user_office_path %>
+          <%= form_with(model: @office, url: user_office_path(@office), local: true, method: :patch) do |f| %>
+            <%= render 'shared/error_office_messages', object: @office %>
+
+            <%= hidden_field_tag :user_id, current_user.id %>
+            <%= hidden_field_tag :id %>
+
+            <%= f.label :number, class: "label-#{yield(:class_text)}" %>
+            <%= f.text_field :number, class: "form-control" %>
+
+            <%= f.label :name, class: "label-#{yield(:class_text)}" %>
+            <%= f.text_field :name, class: "form-control" %>
+
+            <%= f.label "勤怠種類", class: "label-#{yield(:class_text)}" %><br>
+            <%= f.select :category, [["出勤","出勤"],["退勤","退勤"]], prompt: "選択してください", class: "form-control" %>
+
+            <div class="center">
+              <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
+              <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>" data-dismiss="modal">
+                キャンセル
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

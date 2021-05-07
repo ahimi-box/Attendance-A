@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210503142051) do
+ActiveRecord::Schema.define(version: 20210504034055) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -24,9 +24,9 @@ ActiveRecord::Schema.define(version: 20210503142051) do
   end
 
   create_table "offices", force: :cascade do |t|
-    t.integer "office_number"
-    t.string "office_name"
-    t.string "office_category"
+    t.integer "number"
+    t.string "name"
+    t.string "category"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -40,14 +40,14 @@ ActiveRecord::Schema.define(version: 20210503142051) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
-    t.datetime "basic_time", default: "2021-05-03 23:00:00"
-    t.datetime "work_time", default: "2021-05-03 23:00:00"
+    t.datetime "basic_time", default: "2021-05-05 23:00:00"
+    t.datetime "work_time", default: "2021-05-05 23:00:00"
     t.string "department"
     t.boolean "admin"
     t.boolean "superior"
-    t.datetime "designated_work_start_time", default: "2021-05-03 23:00:00"
-    t.datetime "designated_work_end_time", default: "2021-05-04 08:00:00"
-    t.datetime "basic_work_time", default: "2021-05-03 23:00:00"
+    t.datetime "designated_work_start_time", default: "2021-05-05 23:00:00"
+    t.datetime "designated_work_end_time", default: "2021-05-06 08:00:00"
+    t.datetime "basic_work_time", default: "2021-05-05 23:00:00"
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"

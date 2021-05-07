@@ -1,0 +1,61 @@
+<% provide(:title, '拠点情報') %>
+<% provide(:class_text, 'index') %>
+<% provide(:button_text, '登録する') %>
+
+<h1>拠点情報一覧</h1>
+
+<div class="col-md-10 col-md-offset-1">
+  <table class="table-bordered table-striped table-condensed table-on_duty">
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+        <th>拠点番号</th>
+        <th>拠点名</th>
+        <th>勤怠種類</th>
+      </tr>
+    </thead>
+    <% @offices.each do |office| %>
+      <tbody>
+        <tr>
+    <%# user_office_path(office) %>
+          <td><%= link_to "修正", edit_user_office_path(office,office.id), remote: true, class: "btn btn-primary "%> </td>  
+          <td><%= link_to "削除", user_office_path(office,office.id), method: :delete,
+              data: { confirm: "削除してよろしいですか？" }, class: "btn btn-primary" %></td>
+          <%# <td></td> %>
+          <td><%= office.number %></td>
+          <td><%= office.name %></td>
+          <td><%= office.category %></td>
+        </tr>
+      </tbody>
+    <% end %>
+  </table>
+  
+  <div class="panel-box">
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo">拠点情報追加</button>
+          </h4>
+        </div>
+        <div id="demo" class="collapse">
+          <div class="panel-body">
+            <div class="col-md-6 col-md-offset-3">
+              
+              <%= render 'new' %>
+              
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<!--モーダルウインドウ表示-->
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<%# <div id="edit-basic-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div> %>
+<%# data-toggle="modal" data-target="#edit %>

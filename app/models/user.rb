@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   # 1対多の関連性を示すコード
   has_many :attendances, dependent: :destroy
+  has_many :offices, dependent: :destroy
   
   attr_accessor :remember_token
   before_save { self.email = email.downcase }

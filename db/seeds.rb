@@ -29,6 +29,14 @@ User.create!( name: "一般",
               employee_number: "3",
               uid: "3",
               )
+
+Office.create!(
+  user_id: "1",
+  number: "1",
+  name: "拠点A",
+  category: "出勤",
+)
+
               
 # 60.times do |n|
 #   name  = Faker::Name.name

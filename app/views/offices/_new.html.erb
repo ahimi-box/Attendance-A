@@ -1,0 +1,22 @@
+<%# <%= form_with(model: @office, url: user_offices_path, local: true) do |f| %> 
+<%= form_with(model: @office, url: user_offices_path, local: true) do |f| %>
+              
+    <%# <%= render 'shared/error_office_messages', object: @office %> 
+    
+    <%= hidden_field_tag :user_id %>
+
+    <%= f.label "拠点番号", class: "label-#{yield(:class_text)}" %>
+    <%= f.text_field :number, class: "form-control" %>
+
+    <%= f.label "拠点名", class: "label-#{yield(:class_text)}" %>
+    <%= f.text_field :name, class: "form-control" %>
+
+    
+    <%= f.label "勤怠種類", class: "label-#{yield(:class_text)}" %><br>
+    <%= f.select :category, [["出勤","出勤"],["退勤","退勤"]], prompt: "選択してください", class: "form-control" %>
+
+    <div class="center">
+      <%= f.submit yield(:button_text), class: "btn btn-primary btn-lg btn-block btn-#{yield(:class_text)}" %>
+    </div>
+  <% end %>
+
