@@ -26,6 +26,8 @@ ja:
           finished_at: 退勤時間
           note: 備考
           user: ユーザーID
+          month_superior: 所属長承認
+          instructor_confirmation: 指示者確認㊞
         office:
           number: 拠点番号
           name: 拠点名

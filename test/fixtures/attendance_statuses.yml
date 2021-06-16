@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  superior: MyString
+  before__started_at: 2021-05-29 22:07:21
+  before_finished_at: 2021-05-29 22:07:21
+  after_started_at: 2021-05-29 22:07:21
+  after_finished_at: 2021-05-29 22:07:21
+  change_day: 2021-05-29
+  who_consent: MyString
+  attendance: one
+
+two:
+  superior: MyString
+  before__started_at: 2021-05-29 22:07:21
+  before_finished_at: 2021-05-29 22:07:21
+  after_started_at: 2021-05-29 22:07:21
+  after_finished_at: 2021-05-29 22:07:21
+  change_day: 2021-05-29
+  who_consent: MyString
+  attendance: two

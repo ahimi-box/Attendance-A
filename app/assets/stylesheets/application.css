@@ -20,3 +20,17 @@
 .saturday {
   color: #00f;
 }
+
+/* モーダル */
+.table-month-application {
+  width: 100%;
+}
+.th-month_application {
+  text-align: center;
+}
+.td-month_application {
+  text-align: center;
+}
+.btn-month_application {
+  margin-top: 10px;
+}

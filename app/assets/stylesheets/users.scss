@@ -113,7 +113,45 @@
 
 .request {
   margin: 0;
+  // cursor: pointer;
 }
+
+/* 所属長承認申請のお知らせ */
+.month_superior_color{
+  color: #ff0000;
+}
+.month_superior_color:hover{
+  color: #ff0000;
+  text-decoration: none;
+}
+.month_superior_color1{
+  color: #ff0000;
+  border: 2px solid #ff0000;
+}
+
+.month_superior_color2{
+  color: black;
+}
+
+
+/* modal  申請 */
+.table-month-application {
+  width: 90%;
+  margin: auto;
+  // width: 800px;
+  // margin-left: -190px;
+  // background: chartreuse;
+}
+.th-edit-month_application {
+  text-align: center;
+}
+.td-edit-month_application {
+  text-align: center;
+}
+.btn-edit {
+  margin-top: 10px;
+}
+
 
 /* on_duty */
 .table-on_duty {

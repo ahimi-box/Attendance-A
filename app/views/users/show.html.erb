@@ -2,7 +2,12 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
+    <%# <% debugger %> %>
+      <%# <% if @user.id == @approval.user_id %> %>
       <td colspan="2"><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary btn-sm" %>【<%= l(@first_day, format: :middle) %>】時間管理表 <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-primary btn-sm" %></td>
+      <%# <% else %> %>
+      <%# <td colspan="2">【<%= l(@first_day, format: :middle) %>】時間管理表 </td> %>
+      <%# <% end %> %>
       <td colspan="2">指定勤務開始時間<span class="time-space1"><%= format_basic_info(@user.designated_work_start_time) %></span><br>指定勤務終了時間<span class="time-space1"><%= format_basic_info(@user.designated_work_end_time) %></span></td>
       <td colspan="2">基本時間  <span class="time-space2"><%= format_basic_info(@user.basic_work_time) %></span></td>
       <td>初日  <%= l(@first_day, format: :short) %></td>
@@ -21,11 +26,18 @@
   </table>
 </div>
 <% if current_user.superior %>
-<div>
-  <p class="request">【所属長承認申請のお知らせ】</p>
-  <p class="request">【勤怠変更申請のお知らせ】</p>
-  <p class="request">【残業申請のお知らせ】</p>
-</div>
+  <div>
+    <% if @user.id == 2 && @month_superior_A != 0 %>
+      <%# <% debugger %> %>
+      <p class="request"><%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %><span class="month_superior_color1"><%= @month_superior_A %>件の通知があります。</span></p>
+    <% elsif @user.id == 3 && @month_superior_B != 0 %>
+      <p class="request"><%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %><span class="month_superior_color1"><%= @month_superior_B %>件の通知があります。</span></p>
+    <% elsif @month_superior_B == 0 %>
+      <%= link_to "【所属長承認申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
+    <% end %> 
+    <p class="request">【勤怠変更申請のお知らせ】</p>
+    <p class="request">【残業申請のお知らせ】</p>
+  </div>
 <% end %>
 
 <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary btn-sm" %>  
@@ -74,7 +86,11 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-        <td><%= link_to "残業申請", "#", class: "btn btn-primary btn-sm" %></td>
+        <td>
+        <%# <% debugger %> %>
+          <%= link_to "残業申請", "#",remote: true, class: "btn btn-primary btn-sm" %>
+          
+          </td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td>
             <% if day.worked_on.wday == 0 %>
@@ -115,11 +131,49 @@
         <td colspan="6"></td>
         <td><%= format("%.2f", @total_working_times.to_f) %></td>
         <td colspan="5"></td>
-        <td>所属長承認  未<br><select class="select-width" size="1"><option></option><option>上長A</option><option>上長B</option></select><br><%= link_to "申請", "#", class: "btn btn-primary btn-block btn-1" %></td>
+        <td>
+          <%# <% debugger %> 
+          <% if current_user == @user %>
+           <% if !@approvals.present? %>
+            <%= "所属長承認：未" %>
+            <% end %>
+            <% @approvals.each do |approval| %>
+              <% if approval.month_superior.present? && approval.instructor_confirmation.present? %>
+                <% if (approval.instructor_confirmation == "承認").present? || (approval.instructor_confirmation == "否認").present? %>
+                  <%= "所属長承認：#{approval.month_superior}から#{approval.instructor_confirmation}済" %>
+                <% end %>
+              <% else %>
+                <%= "所属長承認：未" %>
+              <% end %>
+            <% end %>
 
-      </tr> 
-       
+            <%= form_with(model: [@user, @approval], local: true) do |f| %>
+              <%= f.hidden_field :one_month, value: @first_day %>
+              <%= f.select :month_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %>
+              <div class="center">
+                <%= f.submit "申請", class: "btn btn-primary btn-block btn-1" %>
+              </div> 
+            <% end %>
+          <% end %>    
+        </td>
+      </tr>     
     </tfoot>
   </table>
 </div>
+
+<!--モーダルウインドウ表示-->
+<div id="edit-month-application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div id="new-overwork" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+
+<%# <div id="edit-basic-info2" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div> %>
+
+<%# <div id="edit-month-application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div> %>
+<%# <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div> %>
+
+
+
+
+
 

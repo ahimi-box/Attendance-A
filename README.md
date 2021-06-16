@@ -1,16 +1,6 @@
-# サンプルアプリケーション
-
-このアプリケーションを土台として、タスク管理機能を持つアプリへ拡張していただきます。
-
-## 開発環境
-
-* AWS Cloud9
-* Ruby
-* Git
-* Heroku
 
 ```
-$ git clone https://github.com/sample-874/sample-app.git
+$ git clone https://___________
 ```
 
 上記のコマンド実行（リポジトリをクローン）後、

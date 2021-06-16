@@ -2,7 +2,9 @@ class User < ApplicationRecord
   # 1対多の関連性を示すコード
   has_many :attendances, dependent: :destroy
   has_many :offices, dependent: :destroy
-  
+  has_many :approvals, dependent: :destroy
+  has_many :overtimes, dependent: :destroy
+
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -66,4 +68,6 @@ class User < ApplicationRecord
   def self.updatable_attributes
     ["name", "email", "affiliation", "employee_number", "uid", "password","basic_work_time", "designated_work_start_time","designated_work_end_time" ]
   end
+
+
 end

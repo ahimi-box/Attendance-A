@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210504034055) do
+ActiveRecord::Schema.define(version: 20210603090714) do
+
+  create_table "approvals", force: :cascade do |t|
+    t.string "month_superior"
+    t.date "one_month"
+    t.string "instructor_confirmation"
+    t.boolean "checkbox"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_approvals_on_user_id"
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -33,6 +44,26 @@ ActiveRecord::Schema.define(version: 20210504034055) do
     t.index ["user_id"], name: "index_offices_on_user_id"
   end
 
+  create_table "overtimes", force: :cascade do |t|
+    t.integer "applicant_user_id"
+    t.date "overtime"
+    t.date "scheduled_end_time"
+    t.string "business_processing_content"
+    t.boolean "nextday"
+    t.string "superior"
+    t.string "instructor_confirmation"
+    t.datetime "before_started_at"
+    t.datetime "before_finished_at"
+    t.datetime "after_started_at"
+    t.datetime "after_finished_at"
+    t.date "change_day"
+    t.string "who_consent"
+    t.integer "attendance_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attendance_id"], name: "index_overtimes_on_attendance_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -40,14 +71,14 @@ ActiveRecord::Schema.define(version: 20210504034055) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
-    t.datetime "basic_time", default: "2021-05-05 23:00:00"
-    t.datetime "work_time", default: "2021-05-05 23:00:00"
+    t.datetime "basic_time", default: "2021-06-15 23:00:00"
+    t.datetime "work_time", default: "2021-06-15 23:00:00"
     t.string "department"
     t.boolean "admin"
     t.boolean "superior"
-    t.datetime "designated_work_start_time", default: "2021-05-05 23:00:00"
-    t.datetime "designated_work_end_time", default: "2021-05-06 08:00:00"
-    t.datetime "basic_work_time", default: "2021-05-05 23:00:00"
+    t.datetime "designated_work_start_time", default: "2021-06-15 23:00:00"
+    t.datetime "designated_work_end_time", default: "2021-06-16 08:00:00"
+    t.datetime "basic_work_time", default: "2021-06-15 23:00:00"
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"
