@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210603090714) do
+ActiveRecord::Schema.define(version: 20210616065532) do
 
   create_table "approvals", force: :cascade do |t|
     t.string "month_superior"
@@ -31,6 +31,12 @@ ActiveRecord::Schema.define(version: 20210603090714) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "edit_superior"
+    t.boolean "edit_nextday"
+    t.boolean "change"
+    t.string "instructor"
+    t.datetime "change_started_at"
+    t.datetime "change_finished_at"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -71,14 +77,14 @@ ActiveRecord::Schema.define(version: 20210603090714) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
-    t.datetime "basic_time", default: "2021-06-15 23:00:00"
-    t.datetime "work_time", default: "2021-06-15 23:00:00"
+    t.datetime "basic_time", default: "2021-06-27 23:00:00"
+    t.datetime "work_time", default: "2021-06-27 23:00:00"
     t.string "department"
     t.boolean "admin"
     t.boolean "superior"
-    t.datetime "designated_work_start_time", default: "2021-06-15 23:00:00"
-    t.datetime "designated_work_end_time", default: "2021-06-16 08:00:00"
-    t.datetime "basic_work_time", default: "2021-06-15 23:00:00"
+    t.datetime "designated_work_start_time", default: "2021-06-27 23:00:00"
+    t.datetime "designated_work_end_time", default: "2021-06-28 08:00:00"
+    t.datetime "basic_work_time", default: "2021-06-27 23:00:00"
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"

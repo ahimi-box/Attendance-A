@@ -23,38 +23,15 @@ class UsersController < ApplicationController
     @worked_sum = @attendances.where.not(started_at: nil).count
     @month_superior_A = Approval.all.where(month_superior: '上長A').count
     @month_superior_B = Approval.all.where(month_superior: '上長B').count    
+    # byebug
+
+    @edit_superior_A = Attendance.all.where(edit_superior: '上長A').count
+    @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count    
     
-    # @approval = @user.approvals.find_by(user_id: @user.id)
     @approval = @user.approvals.find_by(id: params[:id])
     @approval = @user.approvals.new
     @approvals = @user.approvals.all
-    # @attendance = @user.attendances.find_by(user_id: @user.id) 
-    # byebug
-    # @approval_A = @user.approvals.all.where(checkbox: true, month_superior: "上長A")
-    # @approval_B = @user.approvals.all.where(checkbox: true, month_superior: "上長B")
-    # @approval_C = @user.approvals.all.where(checkbox: true, instructor_confirmation: "承認")
-    # @approval_D = @user.approvals.all.where(checkbox: true, instructor_confirmation: "否認")
-    # @approvals = @user.approvals.all
-# byebug
-
     
-    
-    # byebug
-    # @approval = @attendance.approvals.all
-    # @approval = @attendance.approvals.find_by(month_superior: "上長A") || @attendance.approvals.find_by(month_superior: "上長B")
-    # @approval = @approval.next_day1
-    #  byebug
-
-    #  @approval_date = @user.attendances.where(worked_on: @first_day) 
-    #  byebug
-    # if @approval.month_superior.nil? && @approval.instructor_confirmation.nil?
-    #   @app = "所属長承認：未"
-    # else
-    #   @app = "所属長承認：#{@approval.month_superior}から#{@approval.instructor_confirmation}済"
-    # end
-    # @approval2 = @attendance.approvals.find_by(instructor_confirmation: "申請中")
-
-    # byebug
   end
 
   def new

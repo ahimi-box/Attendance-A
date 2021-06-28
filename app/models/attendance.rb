@@ -1,7 +1,7 @@
 class Attendance < ApplicationRecord
   belongs_to :user
+  has_many :overtimes, dependent: :destroy
   
- 
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
   

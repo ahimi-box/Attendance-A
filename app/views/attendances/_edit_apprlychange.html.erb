@@ -1,0 +1,102 @@
+<% provide(:title, '勤怠変更申請のお知らせ') %> 
+<% provide(:class_text, 'apprlychange') %>
+<% provide(:button_text, '変更を送信する') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      <%# <h3>残業申請</h3> %>
+    </div>
+    
+    <div class="modal-body">
+      <div class="row">
+        <%= form_with(model: @attendance, url: update_apprlychange_user_attendance_path(@user), local: true, method: :patch) do |f| %>
+         
+          <% @attendances.each do |user_id, attendance| %>
+            <h3 class="center modal-title">
+              <% user = User.find(user_id) %>
+              【<%= user.name %>さんからの勤怠変更申請】
+            </h3>
+            <table class="table-bordered table-striped table-condensed table-month-application">
+              <thead>
+                <tr> 
+                  <th rowspan="3" class="th-month_application">日付</th>
+                  <th rowspan="3" class="th-month_application">曜日</th>
+                  <th colspan="4" class="th-month_application">変更前</th>
+                  <th colspan="4" class="th-month_application">変更後</th>
+                  <th rowspan="3" class="th-month_application">備考</th>
+                  <th rowspan="3" class="th-month_application">指示者確認㊞</th>
+                  <th rowspan="3" class="th-month_application">変更</th>
+                  <th rowspan="3" class="th-month_application">勤怠を確認する</th>
+                </tr>
+                <tr>
+                  <th colspan="2">出社</th>
+                  <th colspan="2">退社</th>
+                  <th colspan="2">出社</th>
+                  <th colspan="2">退社</th>
+                </tr>
+                <tr>
+                  <th>時</th>
+                  <th>分</th>
+                  <th>時</th>
+                  <th>分</th>
+                  <th>時</th>
+                  <th>分</th>
+                  <th>時</th>
+                  <th>分</th>
+                </tr>
+
+              </thead>
+              <% attendance.each do |day| %>
+                <%= f.fields_for "attendances[]", day do |app| %>
+                  <tbody>
+                    <tr>
+                      <td class="td-month_application"><%= l(day.worked_on, format: :short) %></td> 
+                      <td>
+                        <% if day.worked_on.wday == 0 %>
+                          <div class="sunday"><%= $days_of_the_week[day.worked_on.wday]%></div> 
+                        <% elsif day.worked_on.wday == 6 %>
+                          <div class="saturday"><%= $days_of_the_week[day.worked_on.wday] %></div>
+                        <% else %>
+                          <%= $days_of_the_week[day.worked_on.wday] %>
+                        <% end %>
+                      </td>
+                      
+                      <%# <%debugger %> 
+                      <td><% if day.started_at != day.change_started_at || day.finished_at != day.change_finished_at %><%= day&.change_started_at&.strftime('%H') %><% end %> </td>
+                      <td><% if day.started_at != day.change_started_at || day.finished_at != day.change_finished_at %><%= day&.change_started_at&.strftime('%M') %><% end %></td>
+                      <td><% if day.started_at != day.change_started_at || day.finished_at != day.change_finished_at %><%= day&.change_finished_at&.strftime('%H') %> <% end %></td>
+                      <td><% if day.started_at != day.change_started_at || day.finished_at != day.change_finished_at %><%= day&.change_finished_at&.strftime('%M') %> <% end %></td>
+                      <td><%= day&.started_at&.strftime('%H') %></td> 
+                      <td><%= day&.started_at&.strftime('%M') %></td> 
+                      <td><%= day&.finished_at&.strftime('%H') %></td> 
+                      <td><%= day&.finished_at&.strftime('%M') %></td> 
+
+                      <%= app.hidden_field :change_started_at, value: day.started_at %>
+                      <%= app.hidden_field :change_finished_at, value: day.finished_at %>
+                      
+                      <td><%= day.note%>備考</td> 
+                      <td class="td-month_application"><%= app.select :instructor, [["なし","なし"],["申請中","申請中"],["承認","承認"],["否認","否認"]],  class: "form-control"%></td>
+                      <td class="td-month_application"><%= app.check_box :change, {}, "true", "false"%></td>
+                      <%# <%debugger%> 
+                      <td class="td-month_application"><%= link_to "確認", user_path(user, date: day.worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}"%></td>
+                    </tr>
+                  </tbody>
+                <% end %>
+              <% end %>
+            </table>
+          <% end %>
+          <div class="center">
+            <%= f.submit yield(:button_text), class: "btn btn-primary btn-edit" %>
+            <button type="button" class="btn btn-default btn-edit" data-dismiss="modal">
+              キャンセル
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

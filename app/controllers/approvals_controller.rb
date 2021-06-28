@@ -61,29 +61,28 @@ class ApprovalsController < ApplicationController
     # if @user.id == 2 
       # byebug
       # if params[:approval][params[:id]][:checkbox] == "true"
-      #   ActiveRecord::Base.transaction do
-      #     # byebug
-          update_month_params.each do |id, approval_param|
-            approval_param.each do |id, approval_param|
-              # if params[:approval][params[:id]][:checkbox] == "true"
-              if approval_param[:checkbox] == "true"
-                approval = Approval.find(id)
-                approval.update_attributes(approval_param)
-                # flash[:success] = "変更を送信しました。"
-                # redirect_to user_path(@user)  
-              # elsif approval_param[:checkbox] == "false"
-              #   flash[:danger] = "変更にチェックしてください。"
-              #   redirect_to user_path(@user) 
-              end 
-            end
-          end
-          flash[:success] = "変更を送信しました。"
-                redirect_to user_path(@user)
-          
-        rescue ActiveRecord::RecordInvalid
-          flash[:danger] = "変更を送信できませんでした。"
-          redirect_to user_path(@user)
+    ActiveRecord::Base.transaction do
+  #     # byebug
+      update_month_params.each do |id, approval_param|
+        approval_param.each do |id, approval_param|
+          # if params[:approval][params[:id]][:checkbox] == "true"
+          if approval_param[:checkbox] == "true"
+            approval = Approval.find(id)
+            approval.update_attributes(approval_param)
+            # flash[:success] = "変更を送信しました。"
+            # redirect_to user_path(@user)  
+          # elsif approval_param[:checkbox] == "false"
+          #   flash[:danger] = "変更にチェックしてください。"
+          #   redirect_to user_path(@user) 
+          end 
         end
+      end
+      flash[:success] = "変更を送信しました。"
+      redirect_to user_path(@user)      
+    rescue ActiveRecord::RecordInvalid
+      flash[:danger] = "変更を送信できませんでした。"
+      redirect_to user_path(@user)
+    end
       # else
       #   flash[:danger] = "変更にチェックしてください。"
       #   redirect_to user_path(@user) 
@@ -112,7 +111,7 @@ class ApprovalsController < ApplicationController
     #   #   redirect_to user_path(@user) 
     #   # end
     # end
-  # end
+  end
 
   private
 

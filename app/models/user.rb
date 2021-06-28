@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :offices, dependent: :destroy
   has_many :approvals, dependent: :destroy
-  has_many :overtimes, dependent: :destroy
+  
 
   attr_accessor :remember_token
   before_save { self.email = email.downcase }

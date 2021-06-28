@@ -21,6 +21,11 @@ Rails.application.routes.draw do
       get '/basic', to: 'users#basic'
     end
     resources :attendances, only: :update do
+      member do
+        get 'edit_apprlychange'
+        patch 'update_apprlychange'
+      end
+      resources :overtimes
     end
     resources :offices
     resources :approvals do 
@@ -29,6 +34,6 @@ Rails.application.routes.draw do
         patch 'update_month_application'
       end
     end
-    resources :overtimes
+    
   end
 end

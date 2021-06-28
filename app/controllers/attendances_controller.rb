@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   
-  before_action :set_user, only: [:edit_one_month, :update_one_month]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_apprlychange, :update_apprlychange]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   # 管理権限者またはログインユーザー本人であれば実行可能
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -34,10 +34,15 @@ class AttendancesController < ApplicationController
   end
   
   def update_one_month
+    # byebug
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+        if item[:edit_nextday] == "true"
+        # byebug
+          attendance = Attendance.find(id)
+          attendance.update_attributes!(item)
+            # byebug
+        end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
@@ -46,6 +51,36 @@ class AttendancesController < ApplicationController
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
+
+  # 勤怠変更の申請と承認
+  def edit_apprlychange
+    # byebug
+    if @user.id == 2
+      @attendances = Attendance.where(edit_superior: "上長A").group_by(&:user_id)
+    elsif @user.id == 3 
+      @attendances = Attendance.where(edit_superior: "上長B").group_by(&:user_id)
+    end
+  end
+
+  def update_apprlychange
+    # byebug
+    # ActiveRecord::Base.transaction do # トランザクションを開始します。
+      apprlychange_params.each do |id, item|
+        if item[:change] == "true"
+        # byebug
+          attendance = Attendance.find(id)
+          attendance.update_attributes!(item)
+            # byebug
+        end
+      end
+    
+      flash[:success] = "変更を送信しました。"
+      redirect_to user_url(date: params[:date])
+    # rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
+      # flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+      # redirect_to attendances_edit_one_month_user_url(date: params[:date])
+    # end
+  end
   
   
   
@@ -53,7 +88,11 @@ class AttendancesController < ApplicationController
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :edit_nextday, :edit_superior])[:attendances]
+    end
+
+    def apprlychange_params
+      params.permit(attendances: [:change_started_at, :change_finished_at, :instructor, :change])[:attendances]
     end
 
     
