@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_apprlychange, :update_apprlychange]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_apprlychange, :update_apprlychange, :edit_over_work_time, :update_over_work_time]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   # 管理権限者またはログインユーザー本人であれば実行可能
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -37,12 +37,12 @@ class AttendancesController < ApplicationController
     # byebug
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       attendances_params.each do |id, item|
-        if item[:edit_nextday] == "true"
+        # if item[:edit_nextday] == "true"
         # byebug
           attendance = Attendance.find(id)
           attendance.update_attributes!(item)
             # byebug
-        end
+        # end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
@@ -81,6 +81,56 @@ class AttendancesController < ApplicationController
       # redirect_to attendances_edit_one_month_user_url(date: params[:date])
     # end
   end
+
+  # 残業申請
+  def edit_overtime
+    @user = User.find(params[:user_id])
+    # @attendance = Attendance.find(params[:id])
+    @attendance = Attendance.find_by(id: params[:id], user_id: @user.id, worked_on: params[:date])
+  end
+
+  def update_overtime
+    @user = User.find(params[:user_id])
+    @attendance = Attendance.find(params[:id])
+    # if params[:attendance][:over_nextday] == "true"
+    #   over_day = @attendance.worked_on.tomorrow
+    # byebug
+    if @attendance.update_attributes(overtime_params)
+      flash[:success] = "変更を送信しました。"
+      redirect_to user_path(@user)
+    else 
+      flash[:danger] = "変更を送信できませんでした。"
+      redirect_to user_path(@user)
+    end
+
+  end
+
+  def edit_over_work_time
+    # byebug
+    @user = User.find(params[:user_id])
+    @attendance = Attendance.find(params[:id])
+    if @user.id == 2
+      @attendances = Attendance.where(over_superior: "上長A").group_by(&:user_id)
+    elsif @user.id == 3 
+      @attendances = Attendance.where(over_superior: "上長B").group_by(&:user_id)
+    end
+  end
+
+  def update_over_work_time
+    # byebug
+    overwork_params.each do |id, overwork|
+      overwork.each do |id, over|
+        if over[:overtime_change] == "true"
+        # byebug
+          attendance = Attendance.find(id)
+          attendance.update_attributes!(over)
+        end
+      end
+      flash[:success] = "変更を送信しました。"
+      redirect_to user_path(@user)
+    end
+    
+  end
   
   
   
@@ -95,8 +145,26 @@ class AttendancesController < ApplicationController
       params.permit(attendances: [:change_started_at, :change_finished_at, :instructor, :change])[:attendances]
     end
 
+    def overtime_params
+      if params[:attendance][:over_nextday] == "true"
+        over_day = @attendance.worked_on.tomorrow
+        over_end_time = params[:attendance]["over_end_time(4i)"] + ":" + params[:attendance]["over_end_time(5i)"]
+        params.require(:attendance).permit(:over_nextday, :over_content, :over_superior,).merge(over_end_time: over_end_time,id: params[:id], user_id: params[:user_id], over_day: over_day)
+      else
+        over_end_time = params[:attendance]["over_end_time(4i)"] + ":" + params[:attendance]["over_end_time(5i)"]
+        params.require(:attendance).permit(:over_day, :over_nextday, :over_content, :over_superior,).merge(over_end_time: over_end_time, id: params[:id], user_id: params[:user_id])
+      end
+        # over_end_time = params[:attendance]["over_end_time(4i)"] + ":" + params[:attendance]["over_end_time(5i)"]
+        # params.require(:attendance).permit(:over_day, :over_nextday, :over_content, :over_superior,).merge(over_end_time: over_end_time,id: params[:id], user_id: params[:user_id])
+
+       # params.require(:attendance).permit(:id, :user_id, attendances: [:over_day, :over_end_time, :over_nextday, :over_content, :over_superior]).merge(over_end_time: over_end_time)
+      # params.permit(:id, :user_id, attendance: [:over_day, :over_nextday, :over_content, :over_superior]).merge(over_end_time: over_end_time)
+      # params.require(:attendance).permit(:id, :user_id, attendance: [:over_day, :over_end_time,"over_end_time(4i)", "over_end_time(5i)", :over_nextday, :over_content, :over_superior])
+    end
     
-    
+    def overwork_params
+      params.require(:attendance).permit(overtime: [:over_work_time, :over_instructor, :overtime_change])
+    end
     
     # beforeフィルター
 

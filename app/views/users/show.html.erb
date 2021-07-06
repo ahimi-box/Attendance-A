@@ -39,15 +39,22 @@
 <%# <% debugger %> 
 
     <% if @user.id == 2 && @edit_superior_A != 0 %>
-    <p class="request"><%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color"%><span class="month_superior_color1"><%= @edit_superior_A %>件の通知があります。</span></p> 
+      <p class="request"><%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color"%><span class="month_superior_color1"><%= @edit_superior_A %>件の通知があります。</span></p> 
     
     <% elsif @user.id == 3 && @edit_superior_B != 0 %>
-    <p class="request"><%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color" %><span class="month_superior_color1"><%= @edit_superior_B %>件の通知があります。</span></p>
+      <p class="request"><%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color" %><span class="month_superior_color1"><%= @edit_superior_B %>件の通知があります。</span></p>
     <% elsif @edit_superior_A == 0 && @edit_superior_B == 0 %>
-    <p class="request"><%= link_to "【勤怠変更申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%></p>
+      <p class="request"><%= link_to "【勤怠変更申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%></p>
     <% end %>
-
-    <p class="request">【残業申請のお知らせ】</p>
+<%# <%debugger%> 
+    <% if @user.id == 2 && @overtime_superior_A != 0 %>
+      <p class="request"><%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %><span class="month_superior_color1"><%= @overtime_superior_A %>件の通知があります。</span></p>
+    <% elsif @user.id == 3 && @overtime_superior_B != 0 %>
+      <p class="request"><%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %><span class="month_superior_color1"><%= @overtime_superior_B %>件の通知があります。</span></p>
+    <% elsif @overtime_superior_A ==0 && @overtime_superior_B == 0 %>
+      <p class="request"><%= link_to "【残業申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%></p>
+    <% end %>
+    
   </div>
 <% end %>
 
@@ -97,9 +104,8 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-        <td>
-        <%# <% debugger %> %>
-          <%= link_to "残業申請", "#",remote: true, class: "btn btn-primary btn-sm" %>
+          <td>
+            <%= link_to "残業申請", edit_overtime_user_attendance_path(@user, day, date: day.worked_on),remote: true, class: "btn btn-primary btn-sm " %>
           
           </td>
           <td><%= l(day.worked_on, format: :short) %></td>
@@ -128,15 +134,26 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <td colspan="2"></td>
-          <td></td>
-          <td></td>
+          <td colspan="2">
+            <%= day&.over_end_time&.strftime('%H:%M') %>
+          </td>
           <td>
-          <% if day.instructor == "承認" %>
-          勤怠編集<%= day.instructor %>済
-          <% elsif day.instructor == "否認" %>
-          勤怠編集<%= day.instructor %>
-          <% end %>
+            <%= day.over_work_time %>
+          </td>
+          <td>
+          <%= day.over_content %>
+          </td>
+          <td>
+            <% if day.over_instructor == "承認" %>
+              残業<%= day.over_instructor %>済
+            <% elsif day.over_instructor == "否認" %>
+              残業<%= day.over_instructor %>
+            <% end %>
+            <% if day.instructor == "承認" %>
+              勤怠編集<%= day.instructor %>済
+            <% elsif day.instructor == "否認" %>
+              勤怠編集<%= day.instructor %>
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -183,7 +200,9 @@
 
 <div id="apprlychange" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
-<div id="new-overwork" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div id="edit-overwork" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 
 <%# <div id="edit-basic-info2" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div> %>

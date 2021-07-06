@@ -28,10 +28,33 @@ class UsersController < ApplicationController
     @edit_superior_A = Attendance.all.where(edit_superior: '上長A').count
     @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count    
     
+    # byebug
+    @overtime_superior_A = Attendance.all.where(over_superior: '上長A').count
+    @overtime_superior_B = Attendance.all.where(over_superior: '上長B').count
+    # byebug
+
     @approval = @user.approvals.find_by(id: params[:id])
     @approval = @user.approvals.new
     @approvals = @user.approvals.all
     
+    # @overtimes = Overtime.all 
+    # @overtime = Overtime.find(params[:id])
+    # byebug
+    # @attendances2 = Attendance.joins(:overtimes).select('attendances.*, overtimes.applicant_user_id')
+    # .where('overtimes.overtime,attendances.worked_on')
+    # @overtimes = Overtime.joins(:attendance).select('overtimes.*,attendances.user_id')
+    # @overtimes.each do |overtime|
+    #   @over_content = overtime.business_processing_content
+    #   # byebug
+    # end
+    # # @attendance =@user.attendances.find_by(user_id: @user.id)
+    # @overtime = @attendance.overtimes.find(@attendance.id)
+    # @overtimes = @attendance.overtimes.all
+    # @overtimes.each do |overtime|
+    #   @over_content = overtime.business_processing_content
+
+    # # byebug
+    # end
   end
 
   def new

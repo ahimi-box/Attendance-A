@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210616065532) do
+ActiveRecord::Schema.define(version: 20210703080932) do
 
   create_table "approvals", force: :cascade do |t|
     t.string "month_superior"
@@ -37,6 +37,14 @@ ActiveRecord::Schema.define(version: 20210616065532) do
     t.string "instructor"
     t.datetime "change_started_at"
     t.datetime "change_finished_at"
+    t.datetime "over_end_time"
+    t.date "over_day"
+    t.boolean "over_nextday"
+    t.string "over_content"
+    t.string "over_superior"
+    t.string "over_work_time"
+    t.string "over_instructor"
+    t.boolean "overtime_change"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -53,16 +61,17 @@ ActiveRecord::Schema.define(version: 20210616065532) do
   create_table "overtimes", force: :cascade do |t|
     t.integer "applicant_user_id"
     t.date "overtime"
-    t.date "scheduled_end_time"
-    t.string "business_processing_content"
-    t.boolean "nextday"
-    t.string "superior"
-    t.string "instructor_confirmation"
+    t.datetime "scheduled_end_time"
+    t.datetime "over_work_time"
+    t.string "over_content"
+    t.boolean "over_nextday"
+    t.string "over_superior"
+    t.string "over_instructor"
     t.datetime "before_started_at"
     t.datetime "before_finished_at"
     t.datetime "after_started_at"
     t.datetime "after_finished_at"
-    t.date "change_day"
+    t.date "overtime_change"
     t.string "who_consent"
     t.integer "attendance_id"
     t.datetime "created_at", null: false
@@ -77,14 +86,14 @@ ActiveRecord::Schema.define(version: 20210616065532) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
-    t.datetime "basic_time", default: "2021-06-27 23:00:00"
-    t.datetime "work_time", default: "2021-06-27 23:00:00"
+    t.datetime "basic_time", default: "2021-07-06 08:00:00"
+    t.datetime "work_time", default: "2021-07-06 08:00:00"
     t.string "department"
     t.boolean "admin"
     t.boolean "superior"
-    t.datetime "designated_work_start_time", default: "2021-06-27 23:00:00"
-    t.datetime "designated_work_end_time", default: "2021-06-28 08:00:00"
-    t.datetime "basic_work_time", default: "2021-06-27 23:00:00"
+    t.datetime "designated_work_start_time", default: "2021-07-06 08:00:00"
+    t.datetime "designated_work_end_time", default: "2021-07-06 17:00:00"
+    t.datetime "basic_work_time", default: "2021-07-06 08:00:00"
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"

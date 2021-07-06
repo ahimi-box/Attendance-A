@@ -24,8 +24,14 @@ Rails.application.routes.draw do
       member do
         get 'edit_apprlychange'
         patch 'update_apprlychange'
+      
+        get 'edit_overtime'
+        patch 'update_overtime'
+        get 'edit_over_work_time'
+        patch 'update_over_work_time'
+        
       end
-      resources :overtimes
+      # resources :overtimes
     end
     resources :offices
     resources :approvals do 

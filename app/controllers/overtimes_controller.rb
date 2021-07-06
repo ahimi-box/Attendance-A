@@ -1,2 +1,0 @@
-class OvertimesController < ApplicationController
-end
