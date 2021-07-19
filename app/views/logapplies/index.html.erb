@@ -1,0 +1,102 @@
+<div class="row">
+  <%# <%= form_with(url: correction_log_user_attendance_path,local: true, method: :get ) do |f| %> 
+  <%= form_with(url: user_attendance_logapplies_path, method: :get, class: 'js-form', id: "submit_form") do |f| %>
+  <%# <%= form_with(model: @attendance, url: correction_log_search_user_attendance_path, local: true) do |f| %> 
+    <div class=center>
+      <h1>勤怠ログ</h1>
+    </div>
+    <%# <% if current_user == @user %> 
+    <table class="table-bordered table-striped table-condensed table-log">
+      <tr>
+        
+        <%= f.submit "リセット", type:  :reset, class: "btn btn-default log-reset"%>
+        <%# <%= f.submit "検索", class: "btn btn-primary btn-edit" %> 
+        
+      </tr>
+      <tr>
+        <th class="th-log" >
+          <%= f.select :year, [["2021", 2021], ["2020", 2020], ["2019", 2019], ["2018", 2018], ["2017", 2017]], { include_blank: '年'}, id: "select_year", class: "form-control" %>
+        </th>
+        <td id="selected_year" class="td-log"><%= params[:year] %></td>
+      </tr>
+      <tr>
+        <th>
+          <%= f.select :month, [["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], ["6", 6], ["7", 7], ["8", 8], ["9", 9], ["10", 10], ["11", 11], ["12", 12]], { include_blank: '月'}, id: "select_month", class: "form-control" %>
+        </th>
+        <td id="selected_month" class="td-log"><%= params[:month] %></td>    
+      </tr>
+    </table>
+
+    <%= f.hidden_field :id, value: params[:id], id: "id" %>
+    <%= f.hidden_field :user_id, value: params[:user_id], id: "user_id" %>
+    <table class="table-bordered table-striped table-condensed table-month-application">
+      <thead>
+        <tr> 
+          <th class="log_th">日付</th>
+          <th class="log_th">変更前出社時間</th>
+          <th class="log_th">変更前退社時間</th>
+          <th class="log_th">変更後出社時間</th>
+          <th class="log_th">変更後退社時間</th>
+          <th class="log_th">指示者</th>
+          <th class="log_th">承認日</th>
+        </tr>
+      </thead>
+      <div id="logs"></div>
+
+      <% @logs.each do |attendance_id, attendance| %>
+        <%# 自分のログ表示 %>
+        <% if attendance.last.applicant_user_id == current_user.id %>
+          <tbody>
+            <tr>
+              <td class="log_td"><%= attendance.last.log_worked_on %></td>
+              <%# <td><% if attendance.first.before_started_at.present? %></td> 
+              <%# <%debugger %> 
+              <td class="log_td">
+                <%# <% if attendance.first.before_started_at != attendance.last.after_started_at || attendance.first.before_finished_at != attendance.last.after_finished_at %>
+                <%= attendance.first.before_started_at&.strftime('%H:%M') %>
+                  <%# <% end %> 
+              </td>
+              <td class="log_td">
+                <%# <% if attendance.first.before_started_at != attendance.last.after_started_at || attendance.first.before_finished_at != attendance.last.after_finished_at %> 
+                <%= attendance.first.before_finished_at&.strftime('%H:%M') %>
+                <%# <% end %> 
+              </td>
+              <% if attendance.last.after_started_at.present? %>
+                <td class="log_td"><%= attendance.last.after_started_at&.strftime('%H:%M') %></td>
+              <% else %>
+                <td class="log_td"></td>
+              <% end %>
+              <% if attendance.last.after_finished_at.present? %>
+                <td class="log_td"><%= attendance.last.after_finished_at&.strftime('%H:%M') %></td>
+              <% else %>
+                <td class="log_td"></td>
+              <% end %>
+              <td class="log_td"><%= attendance.last.superior %></td>
+              <td class="log_td"><%= attendance.last.updated_at&.strftime('%y-%m-%d') %></td>
+            </tr>
+          </tbody>
+        <% end %>
+      <% end %>
+    </table>
+  <% end %>
+</div>
+
+<script>
+  $(function(){
+    $("#select_year").change(function(){
+        // let techacademy = this.value ;
+        var techacademy = this.value ;
+        document.getElementById('selected_year').textContent = techacademy;
+        // console.log($("selected_year"));
+
+      $("#select_month").change(function(){
+        var techacademy = this.value ;
+        document.getElementById('selected_month').textContent = techacademy;
+        $("#submit_form").submit();
+      });
+    });
+  });
+
+
+</script>
+

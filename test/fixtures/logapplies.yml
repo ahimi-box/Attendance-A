@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  log_worked_on: 2021-07-15
+  before_started_at: 2021-07-15 12:36:24
+  before_finished_at: 2021-07-15 12:36:24
+  after_started_at: 2021-07-15 12:36:24
+  after_finished_at: 2021-07-15 12:36:24
+  change_day: 2021-07-15
+  superior: MyString
+  applicant_user_id: 1
+  attendance: one
+
+two:
+  log_worked_on: 2021-07-15
+  before_started_at: 2021-07-15 12:36:24
+  before_finished_at: 2021-07-15 12:36:24
+  after_started_at: 2021-07-15 12:36:24
+  after_finished_at: 2021-07-15 12:36:24
+  change_day: 2021-07-15
+  superior: MyString
+  applicant_user_id: 1
+  attendance: two

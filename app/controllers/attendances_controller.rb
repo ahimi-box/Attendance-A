@@ -37,12 +37,11 @@ class AttendancesController < ApplicationController
     # byebug
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       attendances_params.each do |id, item|
+                
         # if item[:edit_nextday] == "true"
-        # byebug
           attendance = Attendance.find(id)
+          # byebug
           attendance.update_attributes!(item)
-            # byebug
-        # end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
@@ -55,6 +54,9 @@ class AttendancesController < ApplicationController
   # 勤怠変更の申請と承認
   def edit_apprlychange
     # byebug
+    @attendance = Attendance.new
+    @attendance.logapplies.build
+    # byebug
     if @user.id == 2
       @attendances = Attendance.where(edit_superior: "上長A").group_by(&:user_id)
     elsif @user.id == 3 
@@ -63,14 +65,46 @@ class AttendancesController < ApplicationController
   end
 
   def update_apprlychange
+    @user = User.find(params[:user_id])
+    @attendance = Attendance.find(params[:id])
+    # @attendance = Attendance.find_by(user_id: params[:user_id])
+    # @attendance.logapplies.all
     # byebug
     # ActiveRecord::Base.transaction do # トランザクションを開始します。
-      apprlychange_params.each do |id, item|
-        if item[:change] == "true"
-        # byebug
-          attendance = Attendance.find(id)
-          attendance.update_attributes!(item)
+      apprlychange_params.each do |id, item3|
+        item3.each do |id, item2|
+          item2.each do |id, item|
+            item[:logapplies_attributes].each do |id, logapplies_attributes| 
+              # byebug
+              # if logapplies_attributes[:instructor].blank?
+                # byebug
+                logapplies_attributes[:instructor] = item[:instructor]
+              # else
+                # byebug
+                # apprlychange_params2.each do |id, item3|
+                #   item3.each do |id, item2|
+                #     item2.each do |id, item|
+                #       if item[:change] == "true"
+                #         attendance = Attendance.find(id)
+                #         attendance.update_attributes!(item)
+                #       end
+                #     end
+                #   end
+                # end
+              # logapplies_attributes = [attendance_id:logapplies_attributes[:attendance_id],instructor: logapplies_attributes[:instructor],id: logapplies_attributes[:id], applicant_user_id: logapplies_attributes[:applicant_user_id],change_day: logapplies_attributes[:change_day], after_started_at: logapplies_attributes[:after_started_at], after_finished_at: logapplies_attributes[:after_finished_at], log_worked_on: logapplies_attributes[:log_worked_on], superior: logapplies_attributes[:superior]]
+              
+              # [logapplies_attributes[:instructor],logapplies_attributes[:id],logapplies_attributes[:applicant_user_id],logapplies_attributes[:change_day],logapplies_attributes[:after_started_at],logapplies_attributes[:after_finished_at],logapplies_attributes[:log_worked_on],logapplies_attributes[:superior]]
+              # end
+            end
             # byebug
+            if item[:change] == "true"
+              attendance = Attendance.find(id)
+              # byebug
+              # if attendance.before_started_at == nil && attendance.before_finished_at == nil
+                # attendance = Attendance.find(id)
+              attendance.update_attributes!(item)
+            end  
+          end
         end
       end
     
@@ -131,18 +165,46 @@ class AttendancesController < ApplicationController
     end
     
   end
-  
-  
-  
+
+  # 勤怠修正ログ(認証済)
+  def correction_log
+    # byebug
+    @user = User.find(params[:user_id])
+    @attendance = Attendance.find(params[:id])
+    # current_user == @user
+    @logs = if params[:year].present? && params[:month].present?
+      year_month = Time.new(params[:year],params[:month])
+      # 2021-07-01 00:00:00 +0900
+      year_month = year_month.to_date
+      # byebug
+      # selectで選択された年月の承認ログを抽出
+      Attendance.where(worked_on: year_month.beginning_of_month..year_month.end_of_month).order(worked_on: "DESC").group_by(&:user_id)
+    else
+      byebug
+      Attendance.where(instructor: "承認") && Attendance.where(over_instructor: "承認").order(worked_on: "DESC").group_by(&:user_id)
+    end
+    # respond_to do |format|
+    #   format.html  # リクエストされるフォーマットがHTML形式の場合
+    #   format.js  # correction_log.js.erbが呼び出される
+    # end
+
+  end
+    
 
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :edit_nextday, :edit_superior])[:attendances]
+      # params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :edit_nextday, :edit_superior, logapplies_attributes: [:attendance_id, :applicant_user_id, :log_worked_on, :superior, :before_started_at, :before_finished_at]])[:attendances]
+      # params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :edit_nextday, :edit_superior, logapply: [:applicant_user_id, :log_worked_on, :superior, :before_started_at, :before_finished_at]])[:attendances]
+     
+      # params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :edit_nextday, :edit_superior], logapply: [:applicant_user_id, :log_worked_on, :superior, :before_started_at, :before_finished_at])[:attendances]
     end
 
     def apprlychange_params
-      params.permit(attendances: [:change_started_at, :change_finished_at, :instructor, :change])[:attendances]
+      params.permit(attendance: [attendances: [:change_started_at, :change_finished_at, :instructor, :change, logapplies_attributes: [:id, :attendance_id, :applicant_user_id, :change_day, :instructor, :after_started_at, :after_finished_at, :log_worked_on, :superior, :before_started_at, :before_finished_at]]])
+      # params.permit(attendance: [attendances: [:change_started_at, :change_finished_at, :instructor, :change, logapplies_attributes: :change_day, :instructor, :after_started_at, :after_finished_at]])[:attendances]
+      # params.permit(attendance: [attendances: :change_started_at, :change_finished_at, :instructor, :change, logapplies_attributes: [:change_day, :instructor, :after_started_at, :after_finished_at]])[:attendances]
     end
 
     def overtime_params
@@ -165,6 +227,7 @@ class AttendancesController < ApplicationController
     def overwork_params
       params.require(:attendance).permit(overtime: [:over_work_time, :over_instructor, :overtime_change])
     end
+
     
     # beforeフィルター
 

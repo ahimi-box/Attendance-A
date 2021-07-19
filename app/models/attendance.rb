@@ -1,6 +1,9 @@
 class Attendance < ApplicationRecord
   belongs_to :user
-  
+  has_many :logapplies, dependent: :destroy
+  # accepts_nested_attributes_for :logapplies
+  accepts_nested_attributes_for :logapplies, allow_destroy: true
+
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
   
@@ -28,4 +31,10 @@ class Attendance < ApplicationRecord
     end
   end
 
+  # def self.search(year_month)
+    # byebug
+    # @attendance = Attendance.where("worked_on LIKE?", "#{year_month}%")
+  #   # @attendance.where(worked_on: search.beginning_of_month..search.end_of_month)
+  # year_month.beginning_of_month..year_month.end_of_month
+  # end
 end

@@ -60,7 +60,9 @@
 
 <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary btn-sm" %>  
 <%= link_to "CSV出力", "#", class: "btn btn-primary btn-sm" %><br>  
-<%= link_to "勤怠修正ログ(承認済)", "#", class: "btn btn-primary btn-sm" %>  
+<%# <%debugger %> 
+<%= link_to "勤怠修正ログ(承認済)", user_attendance_logapplies_path(@user,@user), class: "btn btn-primary btn-sm" %>  
+<%# <%= link_to "勤怠修正ログ(承認済)", correction_log_user_attendance_path(@user), class: "btn btn-primary btn-sm" %>  
 
 
 <div>

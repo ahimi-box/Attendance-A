@@ -65,7 +65,7 @@
                         <% end %>
                       </td>
                       
-                      <%# <%debugger %> 
+                      <%# <%debugger%>  
                       <td><% if day.started_at != day.change_started_at || day.finished_at != day.change_finished_at %><%= day&.change_started_at&.strftime('%H') %><% end %> </td>
                       <td><% if day.started_at != day.change_started_at || day.finished_at != day.change_finished_at %><%= day&.change_started_at&.strftime('%M') %><% end %></td>
                       <td><% if day.started_at != day.change_started_at || day.finished_at != day.change_finished_at %><%= day&.change_finished_at&.strftime('%H') %> <% end %></td>
@@ -77,13 +77,28 @@
 
                       <%= app.hidden_field :change_started_at, value: day.started_at %>
                       <%= app.hidden_field :change_finished_at, value: day.finished_at %>
+                      <%# <%= app.hidden_field :before_started_at, value: day.change_started_at  %>
+                      <%# <%= app.hidden_field :before_finished_at, value: day.change_finished_at %> 
                       
-                      <td><%= day.note%>備考</td> 
+                      <td><%= day.note%></td> 
                       <td class="td-month_application"><%= app.select :instructor, [["なし","なし"],["申請中","申請中"],["承認","承認"],["否認","否認"]],  class: "form-control"%></td>
                       <td class="td-month_application"><%= app.check_box :change, {}, "true", "false"%></td>
                       <%# <%debugger%> 
                       <td class="td-month_application"><%= link_to "確認", user_path(user, date: day.worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}"%></td>
                     </tr>
+                    
+                    <%= app.fields_for :logapplies, @attendance.logapplies.build do |logapply| %>
+                      <%= logapply.hidden_field :attendance_id, value: day.id %>
+                      <%= logapply.hidden_field :applicant_user_id, value: day.user_id %>
+                      <%= logapply.hidden_field :change_day, value: day.updated_at %>
+                      <%= logapply.hidden_field :instructor, value: day.instructor %>
+                      <%= logapply.hidden_field :after_started_at, value: day.started_at %>
+                      <%= logapply.hidden_field :after_finished_at, value: day.finished_at %>
+                      <%= logapply.hidden_field :log_worked_on, value: day.worked_on %>
+                      <%= logapply.hidden_field :superior, value: day.edit_superior %>
+                      <%= logapply.hidden_field :before_started_at, value: day.started_at %>
+                      <%= logapply.hidden_field :before_finished_at, value: day.finished_at %>                      
+                    <% end %>
                   </tbody>
                 <% end %>
               <% end %>

@@ -31,7 +31,7 @@
               </thead>
               <% one_month.each do |approval| %>
                 <%= f.fields_for "approval[]", approval do |app| %>
-                <%# <% debugger %> %>
+                <%# <% debugger %> 
                   <%= app.hidden_field :user_id, :value => approval.user_id %>
                   <tbody>
                     <tr>

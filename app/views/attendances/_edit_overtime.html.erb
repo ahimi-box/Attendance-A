@@ -39,7 +39,7 @@
                 <td><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
 
                 <td class="td-month_application">
-                <%= f.time_select :over_end_time, {include_blank: true, minute_step: 15, ignore_date: true}, class: "form-control time_box" %> 
+                <%= f.time_select :over_end_time, {include_blank: true, minute_step: 15, ignore_date: true}, {class: "time_box"} %> 
                 <%= f.hidden_field :over_end_time, value: @attendance.over_end_time   %>
                 </td>
                 
