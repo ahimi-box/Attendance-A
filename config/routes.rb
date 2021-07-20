@@ -30,7 +30,6 @@ Rails.application.routes.draw do
         get 'edit_over_work_time'
         patch 'update_over_work_time'
         
-        get 'correction_log'
       end
       resources :logapplies
     end

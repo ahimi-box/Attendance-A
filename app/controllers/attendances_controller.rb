@@ -166,31 +166,6 @@ class AttendancesController < ApplicationController
     
   end
 
-  # 勤怠修正ログ(認証済)
-  def correction_log
-    # byebug
-    @user = User.find(params[:user_id])
-    @attendance = Attendance.find(params[:id])
-    # current_user == @user
-    @logs = if params[:year].present? && params[:month].present?
-      year_month = Time.new(params[:year],params[:month])
-      # 2021-07-01 00:00:00 +0900
-      year_month = year_month.to_date
-      # byebug
-      # selectで選択された年月の承認ログを抽出
-      Attendance.where(worked_on: year_month.beginning_of_month..year_month.end_of_month).order(worked_on: "DESC").group_by(&:user_id)
-    else
-      byebug
-      Attendance.where(instructor: "承認") && Attendance.where(over_instructor: "承認").order(worked_on: "DESC").group_by(&:user_id)
-    end
-    # respond_to do |format|
-    #   format.html  # リクエストされるフォーマットがHTML形式の場合
-    #   format.js  # correction_log.js.erbが呼び出される
-    # end
-
-  end
-    
-
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params

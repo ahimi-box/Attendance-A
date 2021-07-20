@@ -45,8 +45,6 @@ ActiveRecord::Schema.define(version: 20210715033624) do
     t.string "over_work_time"
     t.string "over_instructor"
     t.boolean "overtime_change"
-    t.datetime "before_started_at"
-    t.datetime "before_finished_at"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -83,14 +81,14 @@ ActiveRecord::Schema.define(version: 20210715033624) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
-    t.datetime "basic_time", default: "2021-07-18 08:00:00"
-    t.datetime "work_time", default: "2021-07-18 08:00:00"
+    t.datetime "basic_time", default: "2021-07-20 08:00:00"
+    t.datetime "work_time", default: "2021-07-20 08:00:00"
     t.string "department"
     t.boolean "admin"
     t.boolean "superior"
-    t.datetime "designated_work_start_time", default: "2021-07-18 08:00:00"
-    t.datetime "designated_work_end_time", default: "2021-07-18 17:00:00"
-    t.datetime "basic_work_time", default: "2021-07-18 08:00:00"
+    t.datetime "designated_work_start_time", default: "2021-07-20 08:00:00"
+    t.datetime "designated_work_end_time", default: "2021-07-20 17:00:00"
+    t.datetime "basic_work_time", default: "2021-07-20 08:00:00"
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"
