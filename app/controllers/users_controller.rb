@@ -21,40 +21,40 @@ class UsersController < ApplicationController
   
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
+    # byebug
     @month_superior_A = Approval.all.where(month_superior: '上長A').count
-    @month_superior_B = Approval.all.where(month_superior: '上長B').count    
+    @month_superior_A_approval = Approval.all.where(month_superior: '上長A', instructor_confirmation: nil).count
+    @superior_A_instructor_unapproved = Approval.all.where(month_superior: '上長A', instructor_confirmation: 'なし', instructor_confirmation: '申請中').count
+    @superior_A_instructor_denial = Approval.all.where(month_superior: '上長A', instructor_confirmation: '否認').count
+    @month_superior_B = Approval.all.where(month_superior: '上長B', instructor_confirmation: nil).count    
+    @superior_B_instructor_unapproved = Approval.all.where(month_superior: '上長B', instructor_confirmation: 'なし', instructor_confirmation: '申請中').count    
+    @superior_B_instructor_denial = Approval.all.where(month_superior: '上長B', instructor_confirmation: '否認').count    
     # byebug
 
     @edit_superior_A = Attendance.all.where(edit_superior: '上長A').count
+    @edit_superior_A_approval = Attendance.all.where(edit_superior: '上長A', instructor: nil).count
+    byebug
+    @edit_superior_A_instructor_unapproved = Attendance.all.where(edit_superior: '上長A', instructor: 'なし', instructor: '申請中').count
+    @edit_superior_A_instructor_denial = Attendance.all.where(edit_superior: '上長A', instructor: '否認').count
     @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count    
-    
-    # byebug
+    @edit_superior_B_instructor_unapproved = Attendance.all.where(edit_superior: '上長B', instructor: 'なし', instructor: '申請中').count
+    @edit_superior_B_instructor_denial = Attendance.all.where(edit_superior: '上長B', instructor: '否認').count
+
+    # byebug  
     @overtime_superior_A = Attendance.all.where(over_superior: '上長A').count
+    @overtime_superior_A_apploval = Attendance.all.where(over_superior: '上長A', over_instructor: nil).count
+    @overtime_superior_A_instructor_unapproved = Attendance.all.where(over_superior: '上長A', over_instructor: 'なし', over_instructor: '申請中').count
+    @overtime_superior_A_instructor_denial = Attendance.all.where(over_superior: '上長A', over_instructor: '否認').count
     @overtime_superior_B = Attendance.all.where(over_superior: '上長B').count
+    @overtime_superior_B_instructor_unapproved = Attendance.all.where(over_superior: '上長B', over_instructor: 'なし', over_instructor: '申請中').count
+    @overtime_superior_B_instructor_denial = Attendance.all.where(over_superior: '上長B', over_instructor: '否認').count
+    
     # byebug
 
     @approval = @user.approvals.find_by(id: params[:id])
     @approval = @user.approvals.new
     @approvals = @user.approvals.all
     
-    # @overtimes = Overtime.all 
-    # @overtime = Overtime.find(params[:id])
-    # byebug
-    # @attendances2 = Attendance.joins(:overtimes).select('attendances.*, overtimes.applicant_user_id')
-    # .where('overtimes.overtime,attendances.worked_on')
-    # @overtimes = Overtime.joins(:attendance).select('overtimes.*,attendances.user_id')
-    # @overtimes.each do |overtime|
-    #   @over_content = overtime.business_processing_content
-    #   # byebug
-    # end
-    # # @attendance =@user.attendances.find_by(user_id: @user.id)
-    # @overtime = @attendance.overtimes.find(@attendance.id)
-    # @overtimes = @attendance.overtimes.all
-    # @overtimes.each do |overtime|
-    #   @over_content = overtime.business_processing_content
-
-    # # byebug
-    # end
   end
 
   def new
