@@ -71,7 +71,7 @@
                       <%= o.check_box :overtime_change, {}, "true", "false" %>
                       </td>
                       <td class="td-month_application">
-                      <%= link_to "確認", user_path(@user, date: over.over_day.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %>
+                      <%= link_to "確認", user_path(user, date: over.over_day.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %>
                       </td>
                     </tr>
                   </tbody>

@@ -2,12 +2,11 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
-    <%# <% debugger %> %>
-      <%# <% if @user.id == @approval.user_id %> %>
+      <% if @current_user.id == params[:id].to_i %>
       <td colspan="2"><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary btn-sm" %>【<%= l(@first_day, format: :middle) %>】時間管理表 <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-primary btn-sm" %></td>
-      <%# <% else %> %>
-      <%# <td colspan="2">【<%= l(@first_day, format: :middle) %>】時間管理表 </td> %>
-      <%# <% end %> %>
+      <% else %>
+      <td colspan="2">【<%= l(@first_day, format: :middle)%>】時間管理表 </td> 
+      <% end %>
       <td colspan="2">指定勤務開始時間<span class="time-space1"><%= format_basic_info(@user.designated_work_start_time) %></span><br>指定勤務終了時間<span class="time-space1"><%= format_basic_info(@user.designated_work_end_time) %></span></td>
       <td colspan="2">基本時間  <span class="time-space2"><%= format_basic_info(@user.basic_work_time) %></span></td>
       <td>初日  <%= l(@first_day, format: :short) %></td>
@@ -25,15 +24,16 @@
     </tr>
   </table>
 </div>
+
 <%# <% if current_user.superior %> 
-<% if @user.superior %>
+<% if @current_user.id == params[:id].to_i %>
   <div>
     <% if @user.id == 2 && @month_superior_A != 0 %>
       <p class="request">
         <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %>
         <%# <span class="month_superior_color1"> %>
         <% if @month_superior_A_approval != 0 %>
-          <span class="month_superior_color1"><%= @month_superior_A %>件の通知があります。</span>
+          <span class="month_superior_color1"><%= @month_superior_A_approval %>件の通知があります。</span>
         <% end %>
         <% if @superior_A_instructor_unapproved != 0 %>
           <span class="month_superior_color1">未承認は<%= @superior_A_instructor_unapproved %>件あります。</span>
@@ -47,7 +47,7 @@
       <p class="request">
         <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %>
         <% if @month_superior_B_approval != 0 %>
-          <span class="month_superior_color1"><%= @month_superior_B %>件の通知があります。</span>
+          <span class="month_superior_color1"><%= @month_superior_B_approval %>件の通知があります。</span>
         <% end %>
         <% if @superior_B_instructor_unapproved != 0 %>
           <span class="month_superior_color1">未承認は<%= @superior_B_instructor_unapproved %>件あります。</span>
@@ -66,7 +66,7 @@
       <p class="request">
         <%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color"%>
         <% if @edit_superior_A_approval != 0 %> 
-          <span class="month_superior_color1"><%= @edit_superior_A %>件の通知があります。</span>
+          <span class="month_superior_color1"><%= @edit_superior_A_approval %>件の通知があります。</span>
         <% end %>
         <% if @edit_superior_A_instructor_unapproved != 0 %>
           <span class="month_superior_color1">未承認は<%= @edit_superior_A_instructor_unapproved %>件あります。</span>
@@ -80,7 +80,7 @@
       <p class="request">
         <%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
         <% if @edit_superior_B_approval != 0 %>
-          <span class="month_superior_color1"><%= @edit_superior_B %>件の通知があります。</span>
+          <span class="month_superior_color1"><%= @edit_superior_B_approval %>件の通知があります。</span>
         <% end %>
         <% if @edit_superior_B_instructor_unapproved  != 0 %>
           <span class="month_superior_color1">未承認は<%= @edit_superior_B_instructor_unapproved %>件あります。</span>
@@ -99,7 +99,7 @@
       <p class="request">
         <%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
         <% if @overtime_superior_A_apploval != 0 %>
-          <span class="month_superior_color1"><%= @overtime_superior_A %>件の通知があります。</span>
+          <span class="month_superior_color1"><%= @overtime_superior_A_apploval %>件の通知があります。</span>
         <% end %>
         <% if @overtime_superior_A_instructor_unapproved != 0 %>
           <span class="month_superior_color1">未承認は<%= @overtime_superior_A_instructor_unapproved %>件あります。</span>
@@ -112,7 +112,7 @@
       <p class="request">
         <%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
         <% if @overtime_superior_B_apploval != 0 %>
-          <span class="month_superior_color1"><%= @overtime_superior_B %>件の通知があります。</span>
+          <span class="month_superior_color1"><%= @overtime_superior_B_apploval %>件の通知があります。</span>
         <% end %>
         <% if @overtime_superior_B_instructor_unapproved != 0 %>
           <span class="month_superior_color1">未承認は<%= @overtime_superior_B_instructor_unapproved %>件あります。</span>
@@ -129,13 +129,13 @@
     
   </div>
 <% end %>
+<%# <% debugger %> 
 
+<% if @current_user.id == params[:id].to_i %>
 <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary btn-sm" %>  
 <%= link_to "CSV出力", "#", class: "btn btn-primary btn-sm" %><br>  
-<%# <%debugger %> 
 <%= link_to "勤怠修正ログ(承認済)", user_attendance_logapplies_path(@user,@user), class: "btn btn-primary btn-sm" %>  
-<%# <%= link_to "勤怠修正ログ(承認済)", correction_log_user_attendance_path(@user), class: "btn btn-primary btn-sm" %>  
-
+<% end %>
 
 <div>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">

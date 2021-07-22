@@ -54,7 +54,7 @@ class ApprovalsController < ApplicationController
   end
 
   def update_month_application
-    # byebug
+    byebug
     @user = User.find_by(id: params[:user_id])
     @approval = Approval.find_by(user_id: @user.id)
 

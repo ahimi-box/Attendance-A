@@ -30,6 +30,7 @@
                 </tr>
               </thead>
               <% one_month.each do |approval| %>
+              
                 <%= f.fields_for "approval[]", approval do |app| %>
                 <%# <% debugger %> 
                   <%= app.hidden_field :user_id, :value => approval.user_id %>
@@ -40,6 +41,7 @@
                       </td>
                       <td class="td-month_application"><%= app.select :instructor_confirmation, [["なし","なし"],["申請中","申請中"],["承認","承認"],["否認","否認"]],  class: "form-control"%></td>
                       <td class="td-month_application"><%= app.check_box :checkbox, {}, "true", "false" %></td> 
+                      <%# <%debugger %>
                       <td class="td-month_application"><%= link_to "確認", user_path(user, date: approval.one_month.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}"%></td>
                     </tr>
                   </tbody>

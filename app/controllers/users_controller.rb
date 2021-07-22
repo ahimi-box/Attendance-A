@@ -26,17 +26,18 @@ class UsersController < ApplicationController
     @month_superior_A_approval = Approval.all.where(month_superior: '上長A', instructor_confirmation: nil).count
     @superior_A_instructor_unapproved = Approval.all.where(month_superior: '上長A', instructor_confirmation: 'なし', instructor_confirmation: '申請中').count
     @superior_A_instructor_denial = Approval.all.where(month_superior: '上長A', instructor_confirmation: '否認').count
-    @month_superior_B = Approval.all.where(month_superior: '上長B', instructor_confirmation: nil).count    
+    @month_superior_B = Approval.all.where(month_superior: '上長B').count    
+    @month_superior_B_approval = Approval.all.where(month_superior: '上長B', instructor_confirmation: nil).count    
     @superior_B_instructor_unapproved = Approval.all.where(month_superior: '上長B', instructor_confirmation: 'なし', instructor_confirmation: '申請中').count    
     @superior_B_instructor_denial = Approval.all.where(month_superior: '上長B', instructor_confirmation: '否認').count    
     # byebug
 
     @edit_superior_A = Attendance.all.where(edit_superior: '上長A').count
     @edit_superior_A_approval = Attendance.all.where(edit_superior: '上長A', instructor: nil).count
-    byebug
     @edit_superior_A_instructor_unapproved = Attendance.all.where(edit_superior: '上長A', instructor: 'なし', instructor: '申請中').count
     @edit_superior_A_instructor_denial = Attendance.all.where(edit_superior: '上長A', instructor: '否認').count
-    @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count    
+    @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count 
+    @edit_superior_B_approval = Attendance.all.where(edit_superior: '上長B', instructor: nil).count
     @edit_superior_B_instructor_unapproved = Attendance.all.where(edit_superior: '上長B', instructor: 'なし', instructor: '申請中').count
     @edit_superior_B_instructor_denial = Attendance.all.where(edit_superior: '上長B', instructor: '否認').count
 
@@ -46,6 +47,7 @@ class UsersController < ApplicationController
     @overtime_superior_A_instructor_unapproved = Attendance.all.where(over_superior: '上長A', over_instructor: 'なし', over_instructor: '申請中').count
     @overtime_superior_A_instructor_denial = Attendance.all.where(over_superior: '上長A', over_instructor: '否認').count
     @overtime_superior_B = Attendance.all.where(over_superior: '上長B').count
+    @overtime_superior_B_apploval = Attendance.all.where(over_superior: '上長B', over_instructor: nil).count
     @overtime_superior_B_instructor_unapproved = Attendance.all.where(over_superior: '上長B', over_instructor: 'なし', over_instructor: '申請中').count
     @overtime_superior_B_instructor_denial = Attendance.all.where(over_superior: '上長B', over_instructor: '否認').count
     
