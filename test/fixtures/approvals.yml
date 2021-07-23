@@ -2,14 +2,14 @@
 
 one:
   month_superior: MyString
-  one_month: 2021-06-03
+  one_month: 2021-07-23
   instructor_confirmation: MyString
   checkbox: false
   attendance: one
 
 two:
   month_superior: MyString
-  one_month: 2021-06-03
+  one_month: 2021-07-23
   instructor_confirmation: MyString
   checkbox: false
   attendance: two

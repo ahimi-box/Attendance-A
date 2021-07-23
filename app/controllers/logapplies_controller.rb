@@ -33,6 +33,13 @@ class LogappliesController < ApplicationController
     #   format.js  # correction_log.js.erbが呼び出される
     # end
   end
+
+
+  
+
+
+
+
 end
 
 # Logapply.where(instructor: "承認").group_by(&:attendance_id)

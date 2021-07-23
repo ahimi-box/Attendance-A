@@ -53,10 +53,23 @@ class UsersController < ApplicationController
     
     # byebug
 
-    @approval = @user.approvals.find_by(id: params[:id])
-    @approval = @user.approvals.new
-    @approvals = @user.approvals.all
-    
+    # @approval = @attendance.logapplies.find_by(id: params[:id])
+    # @approval = @user.approvals.new
+    # byebug
+    # @approvals = Logapply.all
+    # @app1 = Logapply.all.where(month_superior: '上長A', instructor_confirmation: '承認').where(month_superior: '上長A', instructor_confirmation: '否認').group_by(&:applicant_user_id)
+    # @approval = Logapply.find_by(applicant_user_id: params[:id])
+    # @app1 = Logapply.all.where(month_superior: '上長A', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長A', instructor_confirmation: '否認')).group_by(&:applicant_user_id)
+    # @app2 = Logapply.all.where(month_superior: '上長B', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長B', instructor_confirmation: '否認')).group_by(&:applicant_user_id)
+    # @app1 = Logapply.all.where(month_superior: '上長A', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長A', instructor_confirmation: '否認')).or(Logapply.all.where(month_superior: '上長B', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長B', instructor_confirmation: '否認'))).group_by(&:applicant_user_id)
+    @app1 = Approval.all.where(month_superior: '上長A').or(Approval.all.where(month_superior: '上長B')).group_by(&:applicant_user_id)
+    # @app2 = Approval.all.where(instructor_confirmation: '否認').or(Approval.all.where(instructor_confirmation: '承認')).group_by(&:applicant_user_id)
+    @app2 = Approval.find_by(applicant_user_id: params[:id])
+    # @app1 = Logapply.combination1
+    # @app2 = Logapply.combination2
+    # byebug
+    # @approvals = Logapply.where(month_superior: "上長A", month_superior: "上長B") 
+    # byebug
   end
 
   def new

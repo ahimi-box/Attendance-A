@@ -1,5 +1,6 @@
 class Attendance < ApplicationRecord
   belongs_to :user
+  has_many :approvals, dependent: :destroy
   has_many :logapplies, dependent: :destroy
   # accepts_nested_attributes_for :logapplies
   accepts_nested_attributes_for :logapplies, allow_destroy: true

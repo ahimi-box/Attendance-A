@@ -5,7 +5,8 @@ class CreateApprovals < ActiveRecord::Migration[5.1]
       t.date :one_month
       t.string :instructor_confirmation
       t.boolean :checkbox
-      t.references :user, foreign_key: true
+      t.integer :applicant_user_id
+      t.references :attendance, foreign_key: true
 
       t.timestamps
     end

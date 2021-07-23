@@ -1,16 +1,19 @@
 class ApprovalsController < ApplicationController
-  before_action :set_user, only: [:month_superior_application, :edit_month_application, :update_month_application ]
-  # before_action :set_one_month, only: :edit_month_application
 
+  # 一か月分の勤怠承認
   def create
-    # byebug
-    @user = User.find_by(id: params[:user_id])
-    @approval = @user.approvals.find_by(user_id: @user.id)
-    # @approval = @attendance.approvals.find_by(attendance_id: params[:attendance_id]) 
-    # @approval = @attendance.approvals.find_by()
+    
+    @user = User.find(params[:user_id])
+    # @atendance = Attendance.find_by(id: params[:user_id])
+    # @approval = @attendance.logapplies.find_by(applicant_user_id: @user.id)
     # byebug 
-    @approval = @user.approvals.new(month_superior_params)
+    # @attendance = Logapply.new
+    @approval = Approval.new(month_superior_params)
+    # @attendance.logapplies.build
     # byebug
+    # @approval = @attendance.logapplies(month_superior_params)
+    # byebug
+
     if @approval.save
       # log_in @user
       flash[:success] = "承認申請を#{@approval.month_superior}に送りました。"
@@ -30,33 +33,29 @@ class ApprovalsController < ApplicationController
 
   # 所属長承認申請のお知らせ
   def edit_month_application
-    @user = User.find_by(id: params[:user_id])
-    @approval = @user.approvals.find_by(user_id: @user.id)
-    
+    @user = User.find_by(id: params[:id])
+    # byebug
+    @attendance = @user.attendances.find_by(user_id: params[:user_id])
+    # byebug
+    # @approval = @attendance.logapplies.find_by(applicant_user_id: params[:user_id])
     # byebug
     if @user.id == 2 
-      # @month_superior = @user.approvals.all.where(month_superior: '上長A')
-      # @month_superior = Approval.all.where(month_superior: '上長A').group_by(&:user_id)
       # byebug
       
-      @group = Approval.where(month_superior: '上長A').group_by(&:user_id)
+      @group = Approval.where(month_superior: '上長A').group_by(&:applicant_user_id)
       # byebug
-      # @group2 = Approval.where(month_superior: '上長A').map{|item| item.one_month}
-
-      # @users = User.joins(:approvals).where(approvals: {month_superior: '上長A'}).group(:user_id).map{|item| item.name} 
-      
     elsif @user.id == 3 
       # @month_superior = @user.approvals.all.where(month_superior: '上長B')
-      @group = Approval.where(month_superior: '上長B').group_by(&:user_id)
+      @group = Approval.where(month_superior: '上長B').group_by(&:applicant_user_id)
     end
     # byebug
     
   end
 
   def update_month_application
-    byebug
+    # byebug
     @user = User.find_by(id: params[:user_id])
-    @approval = Approval.find_by(user_id: @user.id)
+    @approval = Approval.find_by(applicant_user_id: @user.id)
 
     # if @user.id == 2 
       # byebug
@@ -65,15 +64,9 @@ class ApprovalsController < ApplicationController
   #     # byebug
       update_month_params.each do |id, approval_param|
         approval_param.each do |id, approval_param|
-          # if params[:approval][params[:id]][:checkbox] == "true"
           if approval_param[:checkbox] == "true"
             approval = Approval.find(id)
             approval.update_attributes(approval_param)
-            # flash[:success] = "変更を送信しました。"
-            # redirect_to user_path(@user)  
-          # elsif approval_param[:checkbox] == "false"
-          #   flash[:danger] = "変更にチェックしてください。"
-          #   redirect_to user_path(@user) 
           end 
         end
       end
@@ -117,18 +110,12 @@ class ApprovalsController < ApplicationController
 
     def month_superior_params
       # params.require(:user).permit(attendances: :month_superior)[:attendances]
-      params.require(:approval).permit(:one_month, :month_superior)
-      # params.permit(:one_month, :month_superior)
+      # params.require(:approval).permit(:one_month, :month_superior)
+      params.permit(:one_month, :month_superior, :applicant_user_id)
     end
 
     def update_month_params
-      params.permit(approval: [:user_id, :instructor_confirmation, :checkbox])
+      params.permit(approval: [:instructor_confirmation, :checkbox])
     end
-
-    # def update_month_application_params
-    #   # params.require(:approval)
-    #   params.require(:approval).permit(approval: [:user_id, :instructor_confirmation, :checkbox])
-      
-    # end
 
 end

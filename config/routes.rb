@@ -31,15 +31,17 @@ Rails.application.routes.draw do
         patch 'update_over_work_time'
         
       end
-      resources :logapplies
+      resources :approvals do
+        member do
+          get 'edit_month_application'
+          patch 'update_month_application'
+        end
+      end
+
+      resources :logapplies 
     end
     resources :offices
-    resources :approvals do 
-      member do
-        get 'edit_month_application'
-        patch 'update_month_application'
-      end
-    end
+    
     
   end
 end

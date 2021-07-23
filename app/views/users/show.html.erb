@@ -25,109 +25,112 @@
   </table>
 </div>
 
-<%# <% if current_user.superior %> 
-<% if @current_user.id == params[:id].to_i %>
-  <div>
-    <% if @user.id == 2 && @month_superior_A != 0 %>
-      <p class="request">
-        <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %>
-        <%# <span class="month_superior_color1"> %>
-        <% if @month_superior_A_approval != 0 %>
-          <span class="month_superior_color1"><%= @month_superior_A_approval %>件の通知があります。</span>
-        <% end %>
-        <% if @superior_A_instructor_unapproved != 0 %>
-          <span class="month_superior_color1">未承認は<%= @superior_A_instructor_unapproved %>件あります。</span>
-        <% end %>
-        <% if @superior_A_instructor_denial != 0 %>
-          <span class="month_superior_color1"> 否認は<%= @superior_A_instructor_denial %>件あります。</span>
-        <% end %>
-        <%# </span> %>
-      </p>
-    <% elsif @user.id == 3 && @month_superior_B != 0 %>
-      <p class="request">
-        <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %>
-        <% if @month_superior_B_approval != 0 %>
-          <span class="month_superior_color1"><%= @month_superior_B_approval %>件の通知があります。</span>
-        <% end %>
-        <% if @superior_B_instructor_unapproved != 0 %>
-          <span class="month_superior_color1">未承認は<%= @superior_B_instructor_unapproved %>件あります。</span>
-        <% end %>
-        <% if @superior_B_instructor_denial != 0 %>
-          <span class="month_superior_color1">否認は<%= @superior_B_instructor_denial %>件あります。</span>
-        <% end %>
-      </p>
-    <% elsif @month_superior_A == 0 && @month_superior_B == 0 %>
-      <%= link_to "【所属長承認申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
-    <% end %>
+<% if current_user.superior %> 
+  <% if @current_user.id == params[:id].to_i %>
+    <div>
+      <% if @user.id == 2 && @month_superior_A != 0 %>
+        <p class="request">
+          <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_attendance_approval_path(@user,@attendances), remote: true, class: "month_superior_color" %>
+          <%# <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %> 
+          <%# <span class="month_superior_color1"> %>
+          <% if @month_superior_A_approval != 0 %>
+            <span class="month_superior_color1"><%= @month_superior_A_approval %>件の通知があります。</span>
+          <% end %>
+          <% if @superior_A_instructor_unapproved != 0 %>
+            <span class="month_superior_color1">未承認は<%= @superior_A_instructor_unapproved %>件あります。</span>
+          <% end %>
+          <% if @superior_A_instructor_denial != 0 %>
+            <span class="month_superior_color1"> 否認は<%= @superior_A_instructor_denial %>件あります。</span>
+          <% end %>
+          <%# </span> %>
+        </p>
+      <% elsif @user.id == 3 && @month_superior_B != 0 %>
+        <p class="request">
+          <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_attendance_approval_path(@user,@attendances), remote: true, class: "month_superior_color" %>
+          <%# <%= link_to "【所属長承認申請のお知らせ】", edit_month_application_user_approval_path(@user), remote: true, class: "month_superior_color" %> 
+          <% if @month_superior_B_approval != 0 %>
+            <span class="month_superior_color1"><%= @month_superior_B_approval %>件の通知があります。</span>
+          <% end %>
+          <% if @superior_B_instructor_unapproved != 0 %>
+            <span class="month_superior_color1">未承認は<%= @superior_B_instructor_unapproved %>件あります。</span>
+          <% end %>
+          <% if @superior_B_instructor_denial != 0 %>
+            <span class="month_superior_color1">否認は<%= @superior_B_instructor_denial %>件あります。</span>
+          <% end %>
+        </p>
+      <% elsif @month_superior_A == 0 && @month_superior_B == 0 %>
+        <%= link_to "【所属長承認申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
+      <% end %>
 
-<%# <% debugger %> 
+  <%# <% debugger %> 
 
-    <% if @user.id == 2 && @edit_superior_A != 0 %>
-      <p class="request">
-        <%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color"%>
-        <% if @edit_superior_A_approval != 0 %> 
-          <span class="month_superior_color1"><%= @edit_superior_A_approval %>件の通知があります。</span>
-        <% end %>
-        <% if @edit_superior_A_instructor_unapproved != 0 %>
-          <span class="month_superior_color1">未承認は<%= @edit_superior_A_instructor_unapproved %>件あります。</span>
-        <% end %>
-        <% if @edit_superior_A_instructor_denial != 0 %>
-          <span class="month_superior_color1">否認は<%= @edit_superior_A_instructor_denial %>件あります。</span>
-        <% end %>
-      </p> 
-    
-    <% elsif @user.id == 3 && @edit_superior_B != 0 %>
-      <p class="request">
-        <%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
-        <% if @edit_superior_B_approval != 0 %>
-          <span class="month_superior_color1"><%= @edit_superior_B_approval %>件の通知があります。</span>
-        <% end %>
-        <% if @edit_superior_B_instructor_unapproved  != 0 %>
-          <span class="month_superior_color1">未承認は<%= @edit_superior_B_instructor_unapproved %>件あります。</span>
-        <% end %>
-        <% if @edit_superior_B_instructor_denial != 0 %>
-          <span class="month_superior_color1"> 否認は<%= @edit_superior_B_instructor_denial %>件あります。</span>
-        <% end %>
-      </p>
-    <% elsif @edit_superior_A == 0 && @edit_superior_B == 0 %>
-      <p class="request">
-        <%= link_to "【勤怠変更申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
-      </p>
-    <% end %>
-<%# <%debugger%> 
-    <% if @user.id == 2 && @overtime_superior_A != 0 %>
-      <p class="request">
-        <%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
-        <% if @overtime_superior_A_apploval != 0 %>
-          <span class="month_superior_color1"><%= @overtime_superior_A_apploval %>件の通知があります。</span>
-        <% end %>
-        <% if @overtime_superior_A_instructor_unapproved != 0 %>
-          <span class="month_superior_color1">未承認は<%= @overtime_superior_A_instructor_unapproved %>件あります。</span>
-        <% end %>
-        <% if @overtime_superior_A_instructor_denial != 0 %>
-          <span class="month_superior_color1">否認は<%= @overtime_superior_A_instructor_denial %>件あります。</span>
-        <% end %>
-      </p>
-    <% elsif @user.id == 3 && @overtime_superior_B != 0 %>
-      <p class="request">
-        <%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
-        <% if @overtime_superior_B_apploval != 0 %>
-          <span class="month_superior_color1"><%= @overtime_superior_B_apploval %>件の通知があります。</span>
-        <% end %>
-        <% if @overtime_superior_B_instructor_unapproved != 0 %>
-          <span class="month_superior_color1">未承認は<%= @overtime_superior_B_instructor_unapproved %>件あります。</span>
-        <% end %>
-        <% if @overtime_superior_B_instructor_denial != 0 %>
-          <span class="month_superior_color1">否認は<%= @overtime_superior_B_instructor_denial %>件あります。</span>
-        <% end %>
-      </p>
-    <% elsif @overtime_superior_A ==0 && @overtime_superior_B == 0 %>
-      <p class="request">
-        <%= link_to "【残業申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
-      </p>
-    <% end %>
-    
-  </div>
+      <% if @user.id == 2 && @edit_superior_A != 0 %>
+        <p class="request">
+          <%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color"%>
+          <% if @edit_superior_A_approval != 0 %> 
+            <span class="month_superior_color1"><%= @edit_superior_A_approval %>件の通知があります。</span>
+          <% end %>
+          <% if @edit_superior_A_instructor_unapproved != 0 %>
+            <span class="month_superior_color1">未承認は<%= @edit_superior_A_instructor_unapproved %>件あります。</span>
+          <% end %>
+          <% if @edit_superior_A_instructor_denial != 0 %>
+            <span class="month_superior_color1">否認は<%= @edit_superior_A_instructor_denial %>件あります。</span>
+          <% end %>
+        </p> 
+      
+      <% elsif @user.id == 3 && @edit_superior_B != 0 %>
+        <p class="request">
+          <%= link_to "【勤怠変更申請のお知らせ】", edit_apprlychange_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
+          <% if @edit_superior_B_approval != 0 %>
+            <span class="month_superior_color1"><%= @edit_superior_B_approval %>件の通知があります。</span>
+          <% end %>
+          <% if @edit_superior_B_instructor_unapproved  != 0 %>
+            <span class="month_superior_color1">未承認は<%= @edit_superior_B_instructor_unapproved %>件あります。</span>
+          <% end %>
+          <% if @edit_superior_B_instructor_denial != 0 %>
+            <span class="month_superior_color1"> 否認は<%= @edit_superior_B_instructor_denial %>件あります。</span>
+          <% end %>
+        </p>
+      <% elsif @edit_superior_A == 0 && @edit_superior_B == 0 %>
+        <p class="request">
+          <%= link_to "【勤怠変更申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
+        </p>
+      <% end %>
+  <%# <%debugger%> 
+      <% if @user.id == 2 && @overtime_superior_A != 0 %>
+        <p class="request">
+          <%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
+          <% if @overtime_superior_A_apploval != 0 %>
+            <span class="month_superior_color1"><%= @overtime_superior_A_apploval %>件の通知があります。</span>
+          <% end %>
+          <% if @overtime_superior_A_instructor_unapproved != 0 %>
+            <span class="month_superior_color1">未承認は<%= @overtime_superior_A_instructor_unapproved %>件あります。</span>
+          <% end %>
+          <% if @overtime_superior_A_instructor_denial != 0 %>
+            <span class="month_superior_color1">否認は<%= @overtime_superior_A_instructor_denial %>件あります。</span>
+          <% end %>
+        </p>
+      <% elsif @user.id == 3 && @overtime_superior_B != 0 %>
+        <p class="request">
+          <%= link_to "【残業申請のお知らせ】", edit_over_work_time_user_attendance_path(@user), remote: true, class: "month_superior_color" %>
+          <% if @overtime_superior_B_apploval != 0 %>
+            <span class="month_superior_color1"><%= @overtime_superior_B_apploval %>件の通知があります。</span>
+          <% end %>
+          <% if @overtime_superior_B_instructor_unapproved != 0 %>
+            <span class="month_superior_color1">未承認は<%= @overtime_superior_B_instructor_unapproved %>件あります。</span>
+          <% end %>
+          <% if @overtime_superior_B_instructor_denial != 0 %>
+            <span class="month_superior_color1">否認は<%= @overtime_superior_B_instructor_denial %>件あります。</span>
+          <% end %>
+        </p>
+      <% elsif @overtime_superior_A ==0 && @overtime_superior_B == 0 %>
+        <p class="request">
+          <%= link_to "【残業申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
+        </p>
+      <% end %>
+      
+    </div>
+  <% end %>
 <% end %>
 <%# <% debugger %> 
 
@@ -240,23 +243,41 @@
         <td><%= format("%.2f", @total_working_times.to_f) %></td>
         <td colspan="5"></td>
         <td>
-          <%# <% debugger %> 
+          <%# <% debugger  %> 
           <% if current_user == @user %>
-           <% if !@approvals.present? %>
-            <%= "所属長承認：未" %>
+          <%# <%debugger %> 
+            <% if !@app2.present? %>
+              <%= "所属長承認：未" %>
             <% end %>
-            <% @approvals.each do |approval| %>
-              <% if approval.month_superior.present? && approval.instructor_confirmation.present? %>
-                <% if (approval.instructor_confirmation == "承認").present? || (approval.instructor_confirmation == "否認").present? %>
-                  <%= "所属長承認：#{approval.month_superior}から#{approval.instructor_confirmation}済" %>
+            
+            <% if @app1.present? %>
+              <%# <% debugger%>
+            <% @app1.each do |id, app| %>
+               <%# <% debugger %>  
+              <% app.each do|approval| %>
+                <% if current_user.id == approval.applicant_user_id %>
+                  <%# <%debugger%> 
+                  <% if approval.month_superior.present? && ((approval.instructor_confirmation == nil) || (approval.instructor_confirmation == "なし") || (approval.instructor_confirmation == "申請中")) %>
+                    <%= "所属長承認：#{approval.month_superior}に申請中" %><br>
+                    <% end %>
+                  <%# <% elsif approval.instructor_confirmation.present? %> 
+                    <% if (approval.instructor_confirmation == "承認").present? || (approval.instructor_confirmation == "否認").present? %>
+                      <%= "所属長承認：#{approval.month_superior}から#{approval.instructor_confirmation}済" %><br>
+                    <% end %>
+                    <%# <% else %> 
+                  <%# <% end %> 
+                    <%# <%debugger%>
+                  <%# <% if approval.instructor_confirmation.present? %> 
+                    <%# <%= "所属長承認：未2" %> 
+                  <%# <% end %> 
                 <% end %>
-              <% else %>
-                <%= "所属長承認：未" %>
               <% end %>
             <% end %>
-
-            <%= form_with(model: [@user, @approval], local: true) do |f| %>
+            <% end %>
+             <%# <%debugger %>
+            <%= form_with(model: @approval, url: user_attendance_approvals_path(@user,@user), local: true, method: :post) do |f| %>
               <%= f.hidden_field :one_month, value: @first_day %>
+              <%= f.hidden_field :applicant_user_id, value: @user.id %>
               <%= f.select :month_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %>
               <div class="center">
                 <%= f.submit "申請", class: "btn btn-primary btn-block btn-1" %>
