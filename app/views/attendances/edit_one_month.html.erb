@@ -68,7 +68,15 @@
               
               </td>
               <!--<td></td>-->
-              <td><%= attendance.select :edit_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control"%></td>
+              <td>
+                <% if @user.id == 2 %>
+                  <%= attendance.select :edit_superior, [["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control"%>
+                <% elsif @user.id == 3 %>
+                  <%= attendance.select :edit_superior, [["上長A", "上長A"]], { include_blank: '選択してください'}, class: "form-control"%>
+                <% else %>
+                  <%= attendance.select :edit_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control"%>
+                <% end %>
+              </td>
 
             </tr>
           <% end %>

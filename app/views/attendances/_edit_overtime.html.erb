@@ -45,7 +45,17 @@
                 
                 <td class="td-month_application"><%= f.check_box :over_nextday, {}, "true", "false" %></td>
                 <td class="td-month_application"><%= f.text_field :over_content %></td>
-                <td class="td-month_application"><%= f.select :over_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %></td> 
+                <%# <%debugger  %>
+                
+                <td class="td-month_application">
+                <% if @user.id == 2 %>
+                  <%= f.select :over_superior, [["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %>
+                <% elsif @user.id == 3 %>
+                  <%= f.select :over_superior, [["上長A", "上長A"]], { include_blank: '選択してください'}, class: "form-control" %>
+                <% else %>
+                  <%= f.select :over_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %>
+                <% end %>
+                </td> 
                 
               </tr>
             </tbody>

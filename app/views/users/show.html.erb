@@ -136,7 +136,7 @@
 
 <% if @current_user.id == params[:id].to_i %>
 <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary btn-sm" %>  
-<%= link_to "CSV出力", "#", class: "btn btn-primary btn-sm" %><br>  
+<%= link_to "CSV出力", user_path(format: :csv), class: "btn btn-primary btn-sm" %><br>  
 <%= link_to "勤怠修正ログ(承認済)", user_attendance_logapplies_path(@user,@user), class: "btn btn-primary btn-sm" %>  
 <% end %>
 
@@ -182,7 +182,9 @@
       <% @attendances.each do |day| %>
         <tr>
           <td>
+            <% if @current_user.id == params[:id].to_i %>
             <%= link_to "残業申請", edit_overtime_user_attendance_path(@user, day, date: day.worked_on),remote: true, class: "btn btn-primary btn-sm " %>
+            <% end %>
           
           </td>
           <td><%= l(day.worked_on, format: :short) %></td>
@@ -198,8 +200,10 @@
           <td colspan="2"><%= l(day.started_at.floor_to(15.minutes), format: :time) if day.started_at.present? %></td>
           <!--<td></td>-->
           <td>
-            <% if btn_text = attendance_state(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-sm" %>
+            <% if @current_user.id == params[:id].to_i %>
+              <% if btn_text = attendance_state(day) %>
+                <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-sm" %>
+              <% end %>
             <% end %>
           </td>
           <td colspan="2"><%= l(day.finished_at.floor_to(15.minutes), format: :time) if day.finished_at.present? %></td>
@@ -221,10 +225,17 @@
           <%= day.over_content %>
           </td>
           <td>
+             <%# <%debugger%>  
+            <% if day.over_superior.present? && day.over_instructor == nil %>
+              <%= day.over_superior %>に残業申請中
+            <% end %>
             <% if day.over_instructor == "承認" %>
               残業<%= day.over_instructor %>済
             <% elsif day.over_instructor == "否認" %>
               残業<%= day.over_instructor %>
+            <% end %>
+            <% if day.edit_superior.present? && day.instructor == nil %>
+              <%= day.edit_superior %>に勤怠変更申請中
             <% end %>
             <% if day.instructor == "承認" %>
               勤怠編集<%= day.instructor %>済
@@ -256,14 +267,18 @@
                <%# <% debugger %>  
               <% app.each do|approval| %>
                 <% if current_user.id == approval.applicant_user_id %>
-                  <%# <%debugger%> 
-                  <% if approval.month_superior.present? && ((approval.instructor_confirmation == nil) || (approval.instructor_confirmation == "なし") || (approval.instructor_confirmation == "申請中")) %>
-                    <%= "所属長承認：#{approval.month_superior}に申請中" %><br>
-                    <% end %>
-                  <%# <% elsif approval.instructor_confirmation.present? %> 
-                    <% if (approval.instructor_confirmation == "承認").present? || (approval.instructor_confirmation == "否認").present? %>
-                      <%= "所属長承認：#{approval.month_superior}から#{approval.instructor_confirmation}済" %><br>
-                    <% end %>
+                  <%# <%debugger %> 
+                  <% if @first_day == approval.one_month %>
+                    <% if approval.month_superior.present? && ((approval.instructor_confirmation == nil) || (approval.instructor_confirmation == "なし") || (approval.instructor_confirmation == "申請中")) %>
+                      <%= "所属長承認：#{approval.month_superior}に申請中" %><br>
+                      <% end %>
+                    <%# <% elsif approval.instructor_confirmation.present? %> 
+                      <% if (approval.instructor_confirmation == "承認").present? || (approval.instructor_confirmation == "否認").present? %>
+                        <%= "所属長承認：#{approval.month_superior}から#{approval.instructor_confirmation}済" %><br>
+                      <% end %>
+                  <% else %>
+                    <%= "所属長承認：未" %>
+                  <% end %>
                     <%# <% else %> 
                   <%# <% end %> 
                     <%# <%debugger%>
@@ -278,7 +293,14 @@
             <%= form_with(model: @approval, url: user_attendance_approvals_path(@user,@user), local: true, method: :post) do |f| %>
               <%= f.hidden_field :one_month, value: @first_day %>
               <%= f.hidden_field :applicant_user_id, value: @user.id %>
-              <%= f.select :month_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %>
+              <% if @user.id == 2 %>
+                <%= f.select :month_superior, [["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %>
+              <% elsif @user.id == 3 %>
+                <%= f.select :month_superior, [["上長A", "上長A"]], { include_blank: '選択してください'}, class: "form-control" %>
+              <% else %>
+                <%= f.select :month_superior, [["上長A", "上長A"],["上長B", "上長B"]], { include_blank: '選択してください'}, class: "form-control" %>
+              <% end %>
+
               <div class="center">
                 <%= f.submit "申請", class: "btn btn-primary btn-block btn-1" %>
               </div> 

@@ -37,8 +37,8 @@
           <th class="log_th">変更前退社時間</th>
           <th class="log_th">変更後出社時間</th>
           <th class="log_th">変更後退社時間</th>
-          <th class="log_th">指示者</th>
-          <th class="log_th">承認日</th>
+          <th class="log_th">承認者</th>
+          <%# <th class="log_th">承認日</th> %>
         </tr>
       </thead>
       <div id="logs"></div>
@@ -72,7 +72,9 @@
                 <td class="log_td"></td>
               <% end %>
               <td class="log_td"><%= attendance.last.superior %></td>
-              <td class="log_td"><%= attendance.last.updated_at&.strftime('%y-%m-%d') %></td>
+              <%# <td class="log_td"> %>
+                <%# <%= attendance.last.updated_at&.strftime('%y-%m-%d') %> 
+              <%# </td> %>
             </tr>
           </tbody>
         <% end %>

@@ -7,8 +7,8 @@ class UsersController < ApplicationController
   before_action :admin_or_correct_user, only: :show
   
   def index
-    @users = User.all
-
+    # @users = User.all
+    @users = User.paginate(page: params[:page],per_page: 10)
     # # 条件分岐
     # @users = if params[:search].present?
        #searchされた場合は、原文+.where('name LIKE ?', "%#{params[:search]}%")を実行
@@ -20,56 +20,51 @@ class UsersController < ApplicationController
   end
   
   def show
+    # csv出力
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data render_to_string, filename: "#{@user.name}さんの勤怠情報.csv", type: :csv
+      end
+    end
+    
+
     @worked_sum = @attendances.where.not(started_at: nil).count
     # byebug
     @month_superior_A = Approval.all.where(month_superior: '上長A').count
     @month_superior_A_approval = Approval.all.where(month_superior: '上長A', instructor_confirmation: nil).count
-    @superior_A_instructor_unapproved = Approval.all.where(month_superior: '上長A', instructor_confirmation: 'なし', instructor_confirmation: '申請中').count
+    @superior_A_instructor_unapproved = Approval.all.where(month_superior: '上長A', instructor_confirmation: 'なし').or(Approval.all.where(month_superior: '上長A', instructor_confirmation: '申請中')).count
     @superior_A_instructor_denial = Approval.all.where(month_superior: '上長A', instructor_confirmation: '否認').count
     @month_superior_B = Approval.all.where(month_superior: '上長B').count    
     @month_superior_B_approval = Approval.all.where(month_superior: '上長B', instructor_confirmation: nil).count    
-    @superior_B_instructor_unapproved = Approval.all.where(month_superior: '上長B', instructor_confirmation: 'なし', instructor_confirmation: '申請中').count    
+    @superior_B_instructor_unapproved = Approval.all.where(month_superior: '上長B', instructor_confirmation: 'なし').or(Approval.all.where(month_superior: '上長B', instructor_confirmation: '申請中')).count    
     @superior_B_instructor_denial = Approval.all.where(month_superior: '上長B', instructor_confirmation: '否認').count    
     # byebug
 
     @edit_superior_A = Attendance.all.where(edit_superior: '上長A').count
     @edit_superior_A_approval = Attendance.all.where(edit_superior: '上長A', instructor: nil).count
-    @edit_superior_A_instructor_unapproved = Attendance.all.where(edit_superior: '上長A', instructor: 'なし', instructor: '申請中').count
+    @edit_superior_A_instructor_unapproved = Attendance.all.where(edit_superior: '上長A', instructor: 'なし').or(Attendance.all.where(edit_superior: '上長A', instructor: '申請中')).count
     @edit_superior_A_instructor_denial = Attendance.all.where(edit_superior: '上長A', instructor: '否認').count
     @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count 
     @edit_superior_B_approval = Attendance.all.where(edit_superior: '上長B', instructor: nil).count
-    @edit_superior_B_instructor_unapproved = Attendance.all.where(edit_superior: '上長B', instructor: 'なし', instructor: '申請中').count
+    @edit_superior_B_instructor_unapproved = Attendance.all.where(edit_superior: '上長B', instructor: 'なし').or(Attendance.all.where(edit_superior: '上長B', instructor: '申請中')).count
     @edit_superior_B_instructor_denial = Attendance.all.where(edit_superior: '上長B', instructor: '否認').count
 
     # byebug  
     @overtime_superior_A = Attendance.all.where(over_superior: '上長A').count
     @overtime_superior_A_apploval = Attendance.all.where(over_superior: '上長A', over_instructor: nil).count
-    @overtime_superior_A_instructor_unapproved = Attendance.all.where(over_superior: '上長A', over_instructor: 'なし', over_instructor: '申請中').count
+    @overtime_superior_A_instructor_unapproved = Attendance.all.where(over_superior: '上長A', over_instructor: 'なし').or(Attendance.all.where(over_superior: '上長A', over_instructor: '申請中')).count
     @overtime_superior_A_instructor_denial = Attendance.all.where(over_superior: '上長A', over_instructor: '否認').count
     @overtime_superior_B = Attendance.all.where(over_superior: '上長B').count
     @overtime_superior_B_apploval = Attendance.all.where(over_superior: '上長B', over_instructor: nil).count
-    @overtime_superior_B_instructor_unapproved = Attendance.all.where(over_superior: '上長B', over_instructor: 'なし', over_instructor: '申請中').count
+    @overtime_superior_B_instructor_unapproved = Attendance.all.where(over_superior: '上長B', over_instructor: 'なし').or(Attendance.all.where(over_superior: '上長B', over_instructor: '申請中')).count
     @overtime_superior_B_instructor_denial = Attendance.all.where(over_superior: '上長B', over_instructor: '否認').count
     
     # byebug
-
-    # @approval = @attendance.logapplies.find_by(id: params[:id])
-    # @approval = @user.approvals.new
-    # byebug
-    # @approvals = Logapply.all
-    # @app1 = Logapply.all.where(month_superior: '上長A', instructor_confirmation: '承認').where(month_superior: '上長A', instructor_confirmation: '否認').group_by(&:applicant_user_id)
-    # @approval = Logapply.find_by(applicant_user_id: params[:id])
-    # @app1 = Logapply.all.where(month_superior: '上長A', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長A', instructor_confirmation: '否認')).group_by(&:applicant_user_id)
-    # @app2 = Logapply.all.where(month_superior: '上長B', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長B', instructor_confirmation: '否認')).group_by(&:applicant_user_id)
-    # @app1 = Logapply.all.where(month_superior: '上長A', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長A', instructor_confirmation: '否認')).or(Logapply.all.where(month_superior: '上長B', instructor_confirmation: '承認').or(Logapply.all.where(month_superior: '上長B', instructor_confirmation: '否認'))).group_by(&:applicant_user_id)
     @app1 = Approval.all.where(month_superior: '上長A').or(Approval.all.where(month_superior: '上長B')).group_by(&:applicant_user_id)
     # @app2 = Approval.all.where(instructor_confirmation: '否認').or(Approval.all.where(instructor_confirmation: '承認')).group_by(&:applicant_user_id)
     @app2 = Approval.find_by(applicant_user_id: params[:id])
-    # @app1 = Logapply.combination1
-    # @app2 = Logapply.combination2
-    # byebug
-    # @approvals = Logapply.where(month_superior: "上長A", month_superior: "上長B") 
-    # byebug
+     # byebug
   end
 
   def new
