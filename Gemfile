@@ -16,7 +16,7 @@ gem 'turbolinks',   '~> 5'
 gem 'jbuilder',     '~> 2.5'
 gem 'rounding'
 # ↓アップする時コメントにする
-gem 'sqlite3'
+# gem 'sqlite3'
 
 gem 'byebug'
 gem 'roo'
@@ -25,7 +25,7 @@ gem 'roo'
 
 group :development, :test do
   gem 'sqlite3'
-  # gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
 
 group :development do
@@ -35,9 +35,9 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
-# group :production do
-#   gem 'pg', '0.20.0'
-# end
+group :production do
+  gem 'pg', '0.20.0'
+end
 
 # Windows環境ではtzinfo-dataというgemを含める必要があります
 # Mac環境でもこのままでOKです
