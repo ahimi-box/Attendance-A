@@ -42,7 +42,8 @@ Office.create!(
 
 
               
-30.times do |n|
+20.times do |n|
+  Faker::Config.locale = :ja
   name  = Faker::Name.name
   email = "sample-#{n+1}@email.com"
   password = "password"

@@ -1,4 +1,6 @@
 class OfficesController < ApplicationController
+  before_action :admin_or_correct_user, only: [:index, :create, :edit, :update, :destroy]
+
   def index
     @offices = Office.all
     # @user = User.find(params[:user_id])
@@ -46,5 +48,18 @@ class OfficesController < ApplicationController
       # params.permit(:user_id, :number, :name, :category)
       params.require(:office).permit(:user_id, :number, :name, :category)
     end
+
+    # 管理者のみ
+    def admin_or_correct_user
+      # byebug
+      @user = User.find(params[:user_id]) if @user.blank?
+      unless current_user?(@user) || current_user.admin?
+      # unless current_user?(@user) || current_user.superior?
+        # flash[:danger] = "編集権限がありません。"
+        flash[:danger] = "不正なアクセスです。"
+        redirect_to(root_url)
+      end
+    end
+
 
 end

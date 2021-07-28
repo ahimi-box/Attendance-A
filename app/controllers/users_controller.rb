@@ -1,10 +1,12 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_month_application]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_month_application, :basic]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]   
-  before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info]
+  before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :on_duty, :basic]
   before_action :set_one_month, only: :show
-  before_action :admin_or_correct_user, only: :show
+  before_action :admin_or_correct_user, only: [:on_duty, :basic]
+  before_action :superior_or_correct_user, only: :show
+  
   
   def index
     # @users = User.all
@@ -20,51 +22,59 @@ class UsersController < ApplicationController
   end
   
   def show
-    # csv出力
-    respond_to do |format|
-      format.html
-      format.csv do
-        send_data render_to_string, filename: "#{@user.name}さんの勤怠情報.csv", type: :csv
+    if current_user.admin 
+      redirect_to(root_url)
+    elsif params[:id].to_i == 1
+      redirect_to(root_url)
+    else
+
+
+      # csv出力
+      respond_to do |format|
+        format.html
+        format.csv do
+          send_data render_to_string, filename: "#{@user.name}さんの勤怠情報.csv", type: :csv
+        end
       end
+      
+
+      @worked_sum = @attendances.where.not(started_at: nil).count
+      # byebug
+      @month_superior_A = Approval.all.where(month_superior: '上長A').count
+      @month_superior_A_approval = Approval.all.where(month_superior: '上長A', instructor_confirmation: nil).count
+      @superior_A_instructor_unapproved = Approval.all.where(month_superior: '上長A', instructor_confirmation: '申請中').count
+      @superior_A_instructor_denial = Approval.all.where(month_superior: '上長A', instructor_confirmation: '否認').count
+      @month_superior_B = Approval.all.where(month_superior: '上長B').count    
+      @month_superior_B_approval = Approval.all.where(month_superior: '上長B', instructor_confirmation: nil).count    
+      @superior_B_instructor_unapproved = Approval.all.where(month_superior: '上長B', instructor_confirmation: '申請中').count    
+      @superior_B_instructor_denial = Approval.all.where(month_superior: '上長B', instructor_confirmation: '否認').count    
+      # byebug
+
+      @edit_superior_A = Attendance.all.where(edit_superior: '上長A').count
+      @edit_superior_A_approval = Attendance.all.where(edit_superior: '上長A', instructor: nil).count
+      @edit_superior_A_instructor_unapproved = Attendance.all.where(edit_superior: '上長A', instructor: '申請中').count
+      @edit_superior_A_instructor_denial = Attendance.all.where(edit_superior: '上長A', instructor: '否認').count
+      @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count 
+      @edit_superior_B_approval = Attendance.all.where(edit_superior: '上長B', instructor: nil).count
+      @edit_superior_B_instructor_unapproved = Attendance.all.where(edit_superior: '上長B', instructor: '申請中').count
+      @edit_superior_B_instructor_denial = Attendance.all.where(edit_superior: '上長B', instructor: '否認').count
+
+      # byebug  
+      @overtime_superior_A = Attendance.all.where(over_superior: '上長A').count
+      @overtime_superior_A_apploval = Attendance.all.where(over_superior: '上長A', over_instructor: nil).count
+      @overtime_superior_A_instructor_unapproved = Attendance.all.where(over_superior: '上長A', over_instructor: '申請中').count
+      @overtime_superior_A_instructor_denial = Attendance.all.where(over_superior: '上長A', over_instructor: '否認').count
+      @overtime_superior_B = Attendance.all.where(over_superior: '上長B').count
+      @overtime_superior_B_apploval = Attendance.all.where(over_superior: '上長B', over_instructor: nil).count
+      @overtime_superior_B_instructor_unapproved = Attendance.all.where(over_superior: '上長B', over_instructor: '申請中').count
+      @overtime_superior_B_instructor_denial = Attendance.all.where(over_superior: '上長B', over_instructor: '否認').count
+      
+      # byebug
+      @app1 = Approval.all.where(month_superior: '上長A').or(Approval.all.where(month_superior: '上長B')).group_by(&:applicant_user_id)
+      # @app2 = Approval.all.where(instructor_confirmation: '否認').or(Approval.all.where(instructor_confirmation: '承認')).group_by(&:applicant_user_id)
+      @app2 = Approval.find_by(applicant_user_id: params[:id])
+      # byebug
     end
-    
-
-    @worked_sum = @attendances.where.not(started_at: nil).count
-    # byebug
-    @month_superior_A = Approval.all.where(month_superior: '上長A').count
-    @month_superior_A_approval = Approval.all.where(month_superior: '上長A', instructor_confirmation: nil).count
-    @superior_A_instructor_unapproved = Approval.all.where(month_superior: '上長A', instructor_confirmation: 'なし').or(Approval.all.where(month_superior: '上長A', instructor_confirmation: '申請中')).count
-    @superior_A_instructor_denial = Approval.all.where(month_superior: '上長A', instructor_confirmation: '否認').count
-    @month_superior_B = Approval.all.where(month_superior: '上長B').count    
-    @month_superior_B_approval = Approval.all.where(month_superior: '上長B', instructor_confirmation: nil).count    
-    @superior_B_instructor_unapproved = Approval.all.where(month_superior: '上長B', instructor_confirmation: 'なし').or(Approval.all.where(month_superior: '上長B', instructor_confirmation: '申請中')).count    
-    @superior_B_instructor_denial = Approval.all.where(month_superior: '上長B', instructor_confirmation: '否認').count    
-    # byebug
-
-    @edit_superior_A = Attendance.all.where(edit_superior: '上長A').count
-    @edit_superior_A_approval = Attendance.all.where(edit_superior: '上長A', instructor: nil).count
-    @edit_superior_A_instructor_unapproved = Attendance.all.where(edit_superior: '上長A', instructor: 'なし').or(Attendance.all.where(edit_superior: '上長A', instructor: '申請中')).count
-    @edit_superior_A_instructor_denial = Attendance.all.where(edit_superior: '上長A', instructor: '否認').count
-    @edit_superior_B = Attendance.all.where(edit_superior: '上長B').count 
-    @edit_superior_B_approval = Attendance.all.where(edit_superior: '上長B', instructor: nil).count
-    @edit_superior_B_instructor_unapproved = Attendance.all.where(edit_superior: '上長B', instructor: 'なし').or(Attendance.all.where(edit_superior: '上長B', instructor: '申請中')).count
-    @edit_superior_B_instructor_denial = Attendance.all.where(edit_superior: '上長B', instructor: '否認').count
-
-    # byebug  
-    @overtime_superior_A = Attendance.all.where(over_superior: '上長A').count
-    @overtime_superior_A_apploval = Attendance.all.where(over_superior: '上長A', over_instructor: nil).count
-    @overtime_superior_A_instructor_unapproved = Attendance.all.where(over_superior: '上長A', over_instructor: 'なし').or(Attendance.all.where(over_superior: '上長A', over_instructor: '申請中')).count
-    @overtime_superior_A_instructor_denial = Attendance.all.where(over_superior: '上長A', over_instructor: '否認').count
-    @overtime_superior_B = Attendance.all.where(over_superior: '上長B').count
-    @overtime_superior_B_apploval = Attendance.all.where(over_superior: '上長B', over_instructor: nil).count
-    @overtime_superior_B_instructor_unapproved = Attendance.all.where(over_superior: '上長B', over_instructor: 'なし').or(Attendance.all.where(over_superior: '上長B', over_instructor: '申請中')).count
-    @overtime_superior_B_instructor_denial = Attendance.all.where(over_superior: '上長B', over_instructor: '否認').count
-    
-    # byebug
-    @app1 = Approval.all.where(month_superior: '上長A').or(Approval.all.where(month_superior: '上長B')).group_by(&:applicant_user_id)
-    # @app2 = Approval.all.where(instructor_confirmation: '否認').or(Approval.all.where(instructor_confirmation: '承認')).group_by(&:applicant_user_id)
-    @app2 = Approval.find_by(applicant_user_id: params[:id])
-     # byebug
   end
 
   def new
@@ -122,7 +132,8 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
-  
+  def basic
+  end
   
 
   private
@@ -135,16 +146,32 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :password, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
 
-    
+    # 管理者
     def admin_or_correct_user
-      @user = User.find(params[:user_id]) if @user.blank?
-      # unless current_user?(@user) || current_user.admin?
-      unless current_user?(@user) || current_user.superior?
+      # byebug
+      @user = User.find(params[:id]) if @user.blank?
+      unless current_user?(@user) || current_user.admin?
         # flash[:danger] = "編集権限がありません。"
         flash[:danger] = "不正なアクセスです。"
         redirect_to(root_url)
       end
     end
+
+
+    # 上長
+    def superior_or_correct_user
+      # byebug
+      @user = User.find(params[:id]) if @user.blank?
+      # byebug
+      unless current_user?(@user) || current_user.superior?
+      # unless current_user?(@user)
+      # unless current_user.superior?
+        # flash[:danger] = "編集権限がありません。"
+        flash[:danger] = "不正なアクセスです。"
+        redirect_to(root_url)
+      end
+    end
+
 
 
 end

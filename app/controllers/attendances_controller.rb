@@ -58,9 +58,9 @@ class AttendancesController < ApplicationController
     @attendance.logapplies.build
     # byebug
     if @user.id == 2
-      @attendances = Attendance.where(edit_superior: "上長A").group_by(&:user_id)
+      @attendances = Attendance.where(edit_superior: "上長A").order(worked_on: "DESC").group_by(&:user_id)
     elsif @user.id == 3 
-      @attendances = Attendance.where(edit_superior: "上長B").group_by(&:user_id)
+      @attendances = Attendance.where(edit_superior: "上長B").order(worked_on: "DESC").group_by(&:user_id)
     end
   end
 
@@ -74,30 +74,16 @@ class AttendancesController < ApplicationController
       apprlychange_params.each do |id, item3|
         item3.each do |id, item2|
           item2.each do |id, item|
+            # byebug
             item[:logapplies_attributes].each do |id, logapplies_attributes| 
               # byebug
               # if logapplies_attributes[:instructor].blank?
                 # byebug
                 logapplies_attributes[:instructor] = item[:instructor]
-              # else
-                # byebug
-                # apprlychange_params2.each do |id, item3|
-                #   item3.each do |id, item2|
-                #     item2.each do |id, item|
-                #       if item[:change] == "true"
-                #         attendance = Attendance.find(id)
-                #         attendance.update_attributes!(item)
-                #       end
-                #     end
-                #   end
-                # end
-              # logapplies_attributes = [attendance_id:logapplies_attributes[:attendance_id],instructor: logapplies_attributes[:instructor],id: logapplies_attributes[:id], applicant_user_id: logapplies_attributes[:applicant_user_id],change_day: logapplies_attributes[:change_day], after_started_at: logapplies_attributes[:after_started_at], after_finished_at: logapplies_attributes[:after_finished_at], log_worked_on: logapplies_attributes[:log_worked_on], superior: logapplies_attributes[:superior]]
-              
-              # [logapplies_attributes[:instructor],logapplies_attributes[:id],logapplies_attributes[:applicant_user_id],logapplies_attributes[:change_day],logapplies_attributes[:after_started_at],logapplies_attributes[:after_finished_at],logapplies_attributes[:log_worked_on],logapplies_attributes[:superior]]
-              # end
+ 
             end
             # byebug
-            if item[:change] == "true"
+            if item[:change] == "true" && (item[:instructor] == "申請中" || item[:instructor] == "承認" || item[:instructor] == "否認")
               attendance = Attendance.find(id)
               # byebug
               # if attendance.before_started_at == nil && attendance.before_finished_at == nil
@@ -144,9 +130,9 @@ class AttendancesController < ApplicationController
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     if @user.id == 2
-      @attendances = Attendance.where(over_superior: "上長A").group_by(&:user_id)
+      @attendances = Attendance.where(over_superior: "上長A").order(worked_on: "DESC").group_by(&:user_id)
     elsif @user.id == 3 
-      @attendances = Attendance.where(over_superior: "上長B").group_by(&:user_id)
+      @attendances = Attendance.where(over_superior: "上長B").order(worked_on: "DESC").group_by(&:user_id)
     end
   end
 
@@ -154,7 +140,8 @@ class AttendancesController < ApplicationController
     # byebug
     overwork_params.each do |id, overwork|
       overwork.each do |id, over|
-        if over[:overtime_change] == "true"
+        # byebug
+        if over[:overtime_change] == "true" && (over[:over_instructor] == "申請中" || over[:over_instructor] == "承認" || over[:over_instructor] == "否認")
         # byebug
           attendance = Attendance.find(id)
           attendance.update_attributes!(over)

@@ -42,11 +42,11 @@ class ApprovalsController < ApplicationController
     if @user.id == 2 
       # byebug
       
-      @group = Approval.where(month_superior: '上長A').group_by(&:applicant_user_id)
+      @group = Approval.where(month_superior: '上長A').order(one_month: "DESC").group_by(&:applicant_user_id)
       # byebug
     elsif @user.id == 3 
       # @month_superior = @user.approvals.all.where(month_superior: '上長B')
-      @group = Approval.where(month_superior: '上長B').group_by(&:applicant_user_id)
+      @group = Approval.where(month_superior: '上長B').order(one_month: "DESC").group_by(&:applicant_user_id)
     end
     # byebug
     
@@ -62,9 +62,11 @@ class ApprovalsController < ApplicationController
       # if params[:approval][params[:id]][:checkbox] == "true"
     ActiveRecord::Base.transaction do
   #     # byebug
-      update_month_params.each do |id, approval_param|
+      update_month_params.each do |id1, approval_param|
+        # byebug
         approval_param.each do |id, approval_param|
-          if approval_param[:checkbox] == "true"
+          # byebug
+          if approval_param[:checkbox] == "true" && (approval_param[:instructor_confirmation] == "申請中" || approval_param[:instructor_confirmation] == "承認" || approval_param[:instructor_confirmation] == "否認")
             approval = Approval.find(id)
             approval.update_attributes(approval_param)
           end 
@@ -111,11 +113,11 @@ class ApprovalsController < ApplicationController
     def month_superior_params
       # params.require(:user).permit(attendances: :month_superior)[:attendances]
       # params.require(:approval).permit(:one_month, :month_superior)
-      params.permit(:one_month, :month_superior, :applicant_user_id)
+      params.permit(:one_month, :month_superior, :applicant_user_id, :id)
     end
 
     def update_month_params
-      params.permit(approval: [:instructor_confirmation, :checkbox])
+      params.permit(approval: [:instructor_confirmation, :checkbox, :id])
     end
 
 end

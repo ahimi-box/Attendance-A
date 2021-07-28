@@ -58,7 +58,8 @@
             <span class="month_superior_color1">否認は<%= @superior_B_instructor_denial %>件あります。</span>
           <% end %>
         </p>
-      <% elsif @month_superior_A == 0 && @month_superior_B == 0 %>
+      <%# <% elsif @month_superior_A == 0 && @month_superior_B == 0 %> 
+      <% else %>
         <%= link_to "【所属長承認申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
       <% end %>
 
@@ -91,7 +92,8 @@
             <span class="month_superior_color1"> 否認は<%= @edit_superior_B_instructor_denial %>件あります。</span>
           <% end %>
         </p>
-      <% elsif @edit_superior_A == 0 && @edit_superior_B == 0 %>
+      <%# <% elsif @edit_superior_A == 0 && @edit_superior_B == 0 %> 
+      <% else %>
         <p class="request">
           <%= link_to "【勤怠変更申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
         </p>
@@ -123,7 +125,8 @@
             <span class="month_superior_color1">否認は<%= @overtime_superior_B_instructor_denial %>件あります。</span>
           <% end %>
         </p>
-      <% elsif @overtime_superior_A ==0 && @overtime_superior_B == 0 %>
+      <%# <% elsif @overtime_superior_A == 0 && @overtime_superior_B == 0 %> 
+      <% else %>
         <p class="request">
           <%= link_to "【残業申請のお知らせ】" , user_path(@user), class: "month_superior_color2"%>
         </p>
