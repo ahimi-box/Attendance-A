@@ -28,15 +28,13 @@ class UsersController < ApplicationController
       redirect_to(root_url)
     else
 
-
       # csv出力
       respond_to do |format|
         format.html
         format.csv do
           send_data render_to_string, filename: "#{@user.name}さんの勤怠情報.csv", type: :csv
         end
-      end
-      
+      end    
 
       @worked_sum = @attendances.where.not(started_at: nil).count
       # byebug
@@ -157,21 +155,16 @@ class UsersController < ApplicationController
       end
     end
 
-
     # 上長
     def superior_or_correct_user
       # byebug
       @user = User.find(params[:id]) if @user.blank?
       # byebug
       unless current_user?(@user) || current_user.superior?
-      # unless current_user?(@user)
-      # unless current_user.superior?
         # flash[:danger] = "編集権限がありません。"
         flash[:danger] = "不正なアクセスです。"
         redirect_to(root_url)
       end
     end
-
-
 
 end
