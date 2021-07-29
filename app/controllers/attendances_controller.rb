@@ -77,18 +77,15 @@ class AttendancesController < ApplicationController
             # byebug
             item[:logapplies_attributes].each do |id, logapplies_attributes| 
               # byebug
-              # if logapplies_attributes[:instructor].blank?
-                # byebug
-                logapplies_attributes[:instructor] = item[:instructor]
- 
+              logapplies_attributes[:instructor] = item[:instructor]
             end
             # byebug
             if item[:change] == "true" && (item[:instructor] == "申請中" || item[:instructor] == "承認" || item[:instructor] == "否認")
               attendance = Attendance.find(id)
-              # byebug
-              # if attendance.before_started_at == nil && attendance.before_finished_at == nil
-                # attendance = Attendance.find(id)
               attendance.update_attributes!(item)
+            elsif item[:change] == "true" && item[:instructor] == "なし"
+              attendance = Attendance.find(id)
+              attendance.destroy
             end  
           end
         end
@@ -145,6 +142,9 @@ class AttendancesController < ApplicationController
         # byebug
           attendance = Attendance.find(id)
           attendance.update_attributes!(over)
+        elsif over[:overtime_change] == "true" && over[:over_instructor] == "なし"
+          attendance = Attendance.find(id)
+          attendance.destroy
         end
       end
       flash[:success] = "変更を送信しました。"

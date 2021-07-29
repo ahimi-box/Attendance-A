@@ -69,6 +69,9 @@ class ApprovalsController < ApplicationController
           if approval_param[:checkbox] == "true" && (approval_param[:instructor_confirmation] == "申請中" || approval_param[:instructor_confirmation] == "承認" || approval_param[:instructor_confirmation] == "否認")
             approval = Approval.find(id)
             approval.update_attributes(approval_param)
+          elsif approval_param[:checkbox] == "true" && approval_param[:instructor_confirmation] == "なし"
+            approval = Approval.find(id)
+            approval.destroy
           end 
         end
       end
