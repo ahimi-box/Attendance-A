@@ -66,7 +66,7 @@ class AttendancesController < ApplicationController
 
   def update_apprlychange
     @user = User.find(params[:user_id])
-    @attendance = Attendance.find(params[:id])
+    # @attendance = Attendance.find(params[:id])
     # @attendance = Attendance.find_by(user_id: params[:user_id])
     # @attendance.logapplies.all
     # byebug
@@ -80,13 +80,30 @@ class AttendancesController < ApplicationController
               logapplies_attributes[:instructor] = item[:instructor]
             end
             # byebug
-            if item[:change] == "true" && (item[:instructor] == "申請中" || item[:instructor] == "承認" || item[:instructor] == "否認")
-              attendance = Attendance.find(id)
-              attendance.update_attributes!(item)
-            elsif item[:change] == "true" && item[:instructor] == "なし"
-              attendance = Attendance.find(id)
-              attendance.destroy
-            end  
+              if item[:change] == "true" && (item[:instructor] == "申請中" || item[:instructor] == "承認" || item[:instructor] == "否認")
+                attendance = Attendance.find(id)
+                attendance.update_attributes!(item)
+              elsif item[:change] == "true" && item[:instructor] == "なし"
+                # attendance = Attendance.find(id)
+                # item[:logapplies_attributes].each do |id, logapplies_attributes|                 
+                #    item[:change] = nil && item[:instructor] = nil && item[:change_started_at] = nil && item[:change_finished_at] = nil && logapplies_attributes[:attendance_id] = nil && logapplies_attributes[:applicant_user_id] = nil && logapplies_attributes[:change_day] = nil && logapplies_attributes[:instructor] = nil && logapplies_attributes[:after_started_at] = nil && logapplies_attributes[:after_finished_at] = nil && logapplies_attributes[:log_worked_on] = nil && logapplies_attributes[:superior] = nil && logapplies_attributes[:before_started_at] = nil && logapplies_attributes[:before_finished_at]
+                #   byebug
+                # end
+                attendance = Attendance.find(id)
+                # byebug
+                attendance.edit_superior = nil 
+                attendance.note = nil
+                attendance.instructor = nil 
+                attendance.change = nil
+                attendance.started_at = nil
+                attendance.finished_at = nil
+                # byebug
+                attendance.save
+                # attendance.update_attributes!(item2)
+                # attendance.destroy
+                # byebug
+              end
+            # end  
           end
         end
       end
@@ -98,6 +115,8 @@ class AttendancesController < ApplicationController
       # redirect_to attendances_edit_one_month_user_url(date: params[:date])
     # end
   end
+  # "attendance"=>{"attendances"=>{"8"=>{"change_started_at"=>"2021-07-29 08:00:00 +0900", "change_finished_at"=>"2021-07-29 18:00:00 +0900", "instructor"=>"なし", "change"=>"true",
+  #  "logapplies_attributes"=>{"0"=>{"attendance_id"=>"8", "applicant_user_id"=>"2", "change_day"=>"2021-07-29 16:05:14 +0900", "instructor"=>"", "after_started_at"=>"2021-07-29 08:00:00 +0900", "after_finished_at"=>"2021-07-29 18:00:00 +0900", "log_worked_on"=>"2021-07-08", "superior"=>"上長B", "before_started_at"=>"2021-07-29 08:00:00 +0900", "before_finished_at"=>"2021-07-29 18:00:00 +0900"}}}}}
 
   # 残業申請
   def edit_overtime
@@ -125,7 +144,7 @@ class AttendancesController < ApplicationController
   def edit_over_work_time
     # byebug
     @user = User.find(params[:user_id])
-    @attendance = Attendance.find(params[:id])
+    # @attendance = Attendance.find(params[:id])
     if @user.id == 2
       @attendances = Attendance.where(over_superior: "上長A").order(worked_on: "DESC").group_by(&:user_id)
     elsif @user.id == 3 
@@ -144,7 +163,15 @@ class AttendancesController < ApplicationController
           attendance.update_attributes!(over)
         elsif over[:overtime_change] == "true" && over[:over_instructor] == "なし"
           attendance = Attendance.find(id)
-          attendance.destroy
+          # byebug
+          attendance.over_end_time = nil
+          attendance.over_day = nil
+          attendance.over_nextday = nil
+          attendance.over_content = nil
+          attendance.over_superior = nil
+          attendance.save
+          # byebug
+          # attendance.destroy
         end
       end
       flash[:success] = "変更を送信しました。"
@@ -187,7 +214,8 @@ class AttendancesController < ApplicationController
     end
     
     def overwork_params
-      params.require(:attendance).permit(overtime: [:over_work_time, :over_instructor, :overtime_change])
+      # params.require(:attendance).permit(overtime: [:over_work_time, :over_instructor, :overtime_change])
+      params.permit(overtime: [:over_work_time, :over_instructor, :overtime_change])
     end
 
     

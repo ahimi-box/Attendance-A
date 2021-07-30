@@ -180,7 +180,7 @@
         
       </tr>
     </thead>
-
+<%# <%debugger %>
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
@@ -266,31 +266,27 @@
             
             <% if @app1.present? %>
               <%# <% debugger%>
-            <% @app1.each do |id, app| %>
-               <%# <% debugger %>  
-              <% app.each do|approval| %>
-                <% if current_user.id == approval.applicant_user_id %>
-                  <%# <%debugger %> 
-                  <% if @first_day == approval.one_month %>
-                    <% if approval.month_superior.present? && ((approval.instructor_confirmation == nil) || (approval.instructor_confirmation == "なし") || (approval.instructor_confirmation == "申請中")) %>
-                      <%= "所属長承認：#{approval.month_superior}に申請中" %><br>
-                      <% end %>
-                    <%# <% elsif approval.instructor_confirmation.present? %> 
-                      <% if (approval.instructor_confirmation == "承認").present? || (approval.instructor_confirmation == "否認").present? %>
+              <% @app1.each do |id, app| %>
+                  
+                <% app.each do|approval| %>
+                  <% if current_user.id == approval.applicant_user_id %>
+                    <%# <%debugger %> 
+                    <% if @first_day.month == approval.one_month.month %>
+                      <% if approval.month_superior.present? && ((approval.instructor_confirmation == nil) || (approval.instructor_confirmation == "申請中")) %>
+                        <%= "所属長承認：#{approval.month_superior}に申請中" %><br>
+                      <%# <% end %>
+                      <%# <% elsif approval.instructor_confirmation.present? %> 
+                      <% elsif (approval.instructor_confirmation == "承認").present? || (approval.instructor_confirmation == "否認").present? %>
                         <%= "所属長承認：#{approval.month_superior}から#{approval.instructor_confirmation}済" %><br>
                       <% end %>
-                  <% else %>
-                    <%= "所属長承認：未" %>
+                      <%# <%debugger%>    
+                    <% else %>
+                        <%# <%debugger%> 
+                      <%= "所属長承認：未" %>
+                    <% end %> 
                   <% end %>
-                    <%# <% else %> 
-                  <%# <% end %> 
-                    <%# <%debugger%>
-                  <%# <% if approval.instructor_confirmation.present? %> 
-                    <%# <%= "所属長承認：未2" %> 
-                  <%# <% end %> 
                 <% end %>
               <% end %>
-            <% end %>
             <% end %>
              <%# <%debugger %>
             <%= form_with(model: @approval, url: user_attendance_approvals_path(@user,@user), local: true, method: :post) do |f| %>
